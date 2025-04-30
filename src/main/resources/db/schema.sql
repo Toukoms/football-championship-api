@@ -10,7 +10,7 @@ CREATE TABLE coach (
 
 CREATE TABLE club (
     id UUID PRIMARY KEY,
-    name VARCHAR(128) NOT NULL,
+    name VARCHAR(128) NOT NULL UNIQUE,
     acronym VARCHAR(3) NOT NULL,
     stadium VARCHAR(128),
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -45,7 +45,7 @@ CREATE TABLE "match" (
     id VARCHAR(50) PRIMARY KEY,
     stadium VARCHAR(100),
     match_datetime TIMESTAMP NOT NULL,
-    status VARCHAR(20) NOT NULL CHECK (status IN ('NOT_STARTED', 'STARTED', 'FINISHED')),
+    status VARCHAR(20) NOT NULL CHECK (sta tus IN ('NOT_STARTED', 'STARTED', 'FINISHED')),
     score_home INTEGER DEFAULT 0,
     score_away INTEGER DEFAULT 0,
 

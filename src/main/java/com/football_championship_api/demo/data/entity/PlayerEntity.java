@@ -10,12 +10,14 @@ import java.util.UUID;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Club {
+public class PlayerEntity {
     private UUID id;
     private String name;
-    private String acronym;
-    private String stadium;
+    private Long number;
+    private PlayerPosition position;
+    private String nationality;
+    private Long age;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-    private Coach coach;
+    private ClubEntity currentClub;
 }

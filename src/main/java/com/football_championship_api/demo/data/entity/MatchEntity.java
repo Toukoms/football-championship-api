@@ -9,22 +9,22 @@ import java.util.UUID;
 
 @Data
 @AllArgsConstructor
-public class Match {
+public class MatchEntity {
     private UUID id;
     private String stadium;
     private LocalDateTime matchDateTime;
     private MatchStatus status;
-    private int score_home;
-    private int score_away;
+    private Long score_home;
+    private Long score_away;
 
-    private Season season;
-    private Club homeClub;
-    private Club awayClub;
+    private SeasonEntity season;
+    private ClubEntity homeClub;
+    private ClubEntity awayClub;
 
-    private List<Player> players;
-    private List<Club> clubs;
+    private List<PlayerEntity> players;
+    private List<ClubEntity> clubs;
 
-    public Match() {
+    public MatchEntity() {
         if (homeClub.equals(awayClub)) {
             throw new IllegalArgumentException("Home Club and Away Club cannot be equal");
         }

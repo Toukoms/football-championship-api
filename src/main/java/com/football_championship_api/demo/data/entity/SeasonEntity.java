@@ -10,10 +10,11 @@ import java.util.UUID;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Coach {
+public class SeasonEntity {
     private UUID id;
-    private String name;
-    private String nationality;
+    private Long year;
+    private String alias;
+    private String status;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }

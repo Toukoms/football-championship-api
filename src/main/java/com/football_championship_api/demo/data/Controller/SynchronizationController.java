@@ -1,3 +1,5 @@
+package com.football_championship_api.demo.data.Controller;
+
 import com.football_championship_api.demo.data.Service.SynchronizationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

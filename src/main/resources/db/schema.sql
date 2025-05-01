@@ -1,4 +1,4 @@
-CREATE DATABASE football_championship;
+CREATE DATABASE football_central;
 
 CREATE TABLE coach (
     id UUID PRIMARY KEY,
@@ -42,24 +42,26 @@ CREATE TABLE season (
 );
 
 
-CREATE TABLE player_statistics (
+CREATE TABLE player_ranking (
+    player_id UUID NOT NULL REFERENCES player(id),
+    championship championship_type NOT NULL,
     scored_goals INTEGER DEFAULT 0,
     playing_time_value NUMERIC,
     playing_time_unit VARCHAR(12) CHECK (playing_time_unit IN ('SECOND', 'MINUTE', 'HOUR')),
-
-    player_id UUID NOT NULL REFERENCES player(id),
-    season_id UUID NOT NULL REFERENCES season(id),
-    PRIMARY KEY (player_id, season_id)
+    PRIMARY KEY (player_id)
 );
 
-CREATE TABLE club_statistics (
+CREATE TABLE club_ranking (
+    club_id UUID NOT NULL REFERENCES club(id),
     ranking_points INTEGER DEFAULT 0,
     scored_goals INTEGER DEFAULT 0,
     conceded_goals INTEGER DEFAULT 0,
     difference_goals INTEGER DEFAULT 0,
     clean_sheet_number INTEGER DEFAULT 0,
-
-    club_id UUID NOT NULL REFERENCES club(id),
-    season_id UUID NOT NULL REFERENCES season(id),
-    PRIMARY KEY (club_id, season_id)
+    PRIMARY KEY (club_id)
 );
+
+
+CREATE TYPE championship_type AS ENUM ( 'PREMIER_LEAGUE', 'LA_LIGA','BUNDESLIGA', 'SERIA','LIGUE_1');
+
+

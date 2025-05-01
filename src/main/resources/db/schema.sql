@@ -15,6 +15,7 @@ CREATE TABLE club (
     id UUID PRIMARY KEY,
     name VARCHAR(128) NOT NULL UNIQUE,
     acronym VARCHAR(3) NOT NULL,
+    year_creation INTEGER,
     stadium VARCHAR(128),
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -48,7 +49,7 @@ CREATE TABLE season (
 CREATE TABLE "match" (
     id UUID PRIMARY KEY,
     stadium VARCHAR(100),
-    match_datetime TIMESTAMP NOT NULL,
+    match_datetime TIMESTAMP,
     status VARCHAR(20) NOT NULL CHECK (status IN ('NOT_STARTED', 'STARTED', 'FINISHED')),
     score_home BIGINT DEFAULT 0,
     score_away BIGINT DEFAULT 0,
@@ -63,6 +64,7 @@ CREATE TABLE match_player (
     match_id UUID NOT NULL REFERENCES "match"(id) ON DELETE CASCADE,
     player_id UUID NOT NULL REFERENCES player(id) ON DELETE CASCADE,
     club_id UUID NOT NULL REFERENCES club(id) ON DELETE CASCADE,
+    playing_time BIGINT DEFAULT 0,
     PRIMARY KEY (match_id, player_id)
 );
 
@@ -73,14 +75,14 @@ CREATE TABLE goal (
     own_goal BOOLEAN NOT NULL DEFAULT FALSE,
     match_id UUID NOT NULL REFERENCES "match"(id) ON DELETE CASCADE,
     club_id UUID NOT NULL REFERENCES club(id) ON DELETE CASCADE,
-    player_id UUID NOT NULL REFERENCES player(id) ON DELETE CASCADE,
-    FOREIGN KEY (match_id, player_id) REFERENCES match_player(match_id, player_id) ON DELETE CASCADE
+    player_id UUID NOT NULL REFERENCES player(id) ON DELETE CASCADE
+    -- Removed the constraint that requires the player to be in match_player
 );
 
 -- PLAYER_STATISTICS
 CREATE TABLE player_statistics (
     scored_goals BIGINT DEFAULT 0,
-    playing_time_value BIGINT,
+    playing_time_value BIGINT DEFAULT 0,
     playing_time_unit VARCHAR(12) CHECK (playing_time_unit IN ('SECOND', 'MINUTE', 'HOUR')),
     player_id UUID NOT NULL REFERENCES player(id) ON DELETE CASCADE,
     season_id UUID NOT NULL REFERENCES season(id) ON DELETE CASCADE,

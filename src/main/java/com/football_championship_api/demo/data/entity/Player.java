@@ -20,4 +20,13 @@ public class Player {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private Club currentClub;
+
+    public Player(UUID id, String name, int number, PlayerPosition position, String nationality, int age) {
+        this.id = id;
+        this.name = name;
+        this.number = number;
+        this.position = position;
+        this.nationality = nationality;
+        this.age = age;
+    }
 }

@@ -17,8 +17,6 @@ public class Player {
     private PlayerPosition position;
     private String nationality;
     private int age;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
     private Club currentClub;
 
     public Player(UUID id, String name, int number, PlayerPosition position, String nationality, int age) {

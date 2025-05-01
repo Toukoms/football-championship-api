@@ -47,11 +47,11 @@ public class SynchronizationService {
         clubs.forEach(clubDAO::insertAll);
 
 
-        List<ClubStatDTO> clubStatDTOs = apiClient.fetchClubStat();
+        List<ClubStatDTO> clubStatDTOs = apiClient.fetchClubStat(int seasonYear);
         List<ClubRanking> clubRankings = clubStatDTOs.stream().map(clubStatMapper::toEntity).toList();
         rankings.forEach(clubRankingDAO::insertAll);
 
-        List<PlayerStatDTO> playerStatDTOs = apiClient.fetchClubStat();
+        List<PlayerStatDTO> playerStatDTOs = apiClient.fetchPlayerStat();
         List<PlayerRanking> playerRankings = playerStatDTOs.stream().map(playerStatMapper::toEntity).toList();
         rankings.forEach(clubRankingDAO::insertAll);
     }

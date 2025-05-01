@@ -41,37 +41,6 @@ CREATE TABLE season (
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE "match" (
-    id VARCHAR(50) PRIMARY KEY,
-    stadium VARCHAR(100),
-    match_datetime TIMESTAMP NOT NULL,
-    status VARCHAR(20) NOT NULL CHECK (sta tus IN ('NOT_STARTED', 'STARTED', 'FINISHED')),
-    score_home INTEGER DEFAULT 0,
-    score_away INTEGER DEFAULT 0,
-
-    season_id UUID NOT NULL REFERENCES season(id),
-    club_home_id UUID NOT NULL REFERENCES club(id),
-    club_away_id UUID NOT NULL REFERENCES club(id),
-    CONSTRAINT different_clubs CHECK (club_home_id != club_away_id)
-);
-
-CREATE TABLE match_player (
-    match_id UUID NOT NULL REFERENCES "match"(id),
-    player_id UUID NOT NULL REFERENCES player(id),
-    club_id UUID NOT NULL REFERENCES club(id),
-    PRIMARY KEY (match_id, player_id)
-);
-
-CREATE TABLE goal (
-    id SERIAL PRIMARY KEY,
-    minute INTEGER NOT NULL CHECK (minute BETWEEN 1 AND 90),
-    own_goal BOOLEAN NOT NULL DEFAULT FALSE,
-
-    match_id UUID NOT NULL REFERENCES "match"(id),
-    club_id UUID NOT NULL REFERENCES club(id),
-    player_id UUID NOT NULL REFERENCES player(id),
-    FOREIGN KEY (match_id, player_id) REFERENCES match_player(match_id, player_id)
-);
 
 CREATE TABLE player_statistics (
     scored_goals INTEGER DEFAULT 0,

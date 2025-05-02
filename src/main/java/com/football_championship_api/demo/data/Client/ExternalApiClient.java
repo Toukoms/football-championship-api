@@ -28,13 +28,13 @@ public class ExternalApiClient {
         return Arrays.asList(response.getBody());
     }
 
-    public List<ClubStatDTO> fetchClubStat( String seasonYear) {
+    public List<ClubStatDTO> fetchClubStat( int seasonYear) {
         String url = "https://localhost:8080/clubs/statistics/{seasonYear}";
         ResponseEntity<ClubStatDTO[]> response = restTemplate.getForEntity(url, ClubStatDTO[].class, seasonYear);
         return Arrays.asList(response.getBody());
     }
 
-    public List<PlayerStatDTO> fetchPlayerStat(String seasonYear) {
+    public List<PlayerStatDTO> fetchPlayerStat(int seasonYear) {
         String url = "https://localhost:8080/players/statistics/{seasonYear}";
         ResponseEntity<PlayerStatDTO[]> response = restTemplate.getForEntity(url, PlayerStatDTO[].class, seasonYear);
         return Arrays.asList(response.getBody());

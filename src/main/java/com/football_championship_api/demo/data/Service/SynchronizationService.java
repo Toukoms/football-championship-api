@@ -37,23 +37,32 @@ public class SynchronizationService {
 
     public void syncAllData() {
 
+        List<SeasonDTO> seasonDTOs = apiClient.fetchSeasons();
+        List<Integer> seasonYears = seasonDTOs.stream().map(seasonMapper::getSeasonYear).toList();
+
+
         List<PlayerDTO> playerDTOs = apiClient.fetchPlayers();
         List<Player> players = playerDTOs.stream().map(playerMapper::toEntity).toList();
-        players.forEach(playerDAO::insertAll);
-
+        players.forEach(playerDAO::insert);
 
         List<ClubDTO> clubDTOs = apiClient.fetchClubs();
         List<Club> clubs = clubDTOs.stream().map(clubMapper::toEntity).toList();
-        clubs.forEach(clubDAO::insertAll);
+        clubs.forEach(clubDAO::insert);
 
+    }
+    public void getStatistics(List<Integer> seasonYears){
 
-        List<ClubStatDTO> clubStatDTOs = apiClient.fetchClubStat(int seasonYear);
-        List<ClubRanking> clubRankings = clubStatDTOs.stream().map(clubStatMapper::toEntity).toList();
-        rankings.forEach(clubRankingDAO::insertAll);
+        for (Integer seasonYear : seasonYears ){
 
-        List<PlayerStatDTO> playerStatDTOs = apiClient.fetchPlayerStat(int seasonYear);
-        List<PlayerRanking> playerRankings = playerStatDTOs.stream().map(playerStatMapper::toEntity).toList();
-        rankings.forEach(clubRankingDAO::insertAll);
+            List<ClubStatDTO> clubStatDTOs = apiClient.fetchClubStat(seasonYear);
+            List<ClubRanking> clubRankings = clubStatDTOs.stream().map(clubStatMapper::toEntity).toList();
+            clubRankings.forEach(clubRankingDAO::insert);
+
+            List<PlayerStatDTO> playerStatDTOs = apiClient.fetchPlayerStat(seasonYear);
+            List<PlayerRanking> playerRankings = playerStatDTOs.stream().map(playerStatMapper::toEntity).toList();
+            playerRankings.forEach(playerRankingDAO::insert);
+
+        }
     }
 
 }

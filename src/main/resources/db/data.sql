@@ -16,10 +16,11 @@ INSERT INTO player (id, name, number, position, nationality, age, current_club_i
 -- SEASONS
 INSERT INTO season (id, year, alias, status) VALUES
 ('55555555-aaaa-bbbb-cccc-111111111111', 2024, '2024 Season', 'STARTED');
+('55555555-aaaa-bbbb-cccc-333333333333', 2025, '2025 Season', 'NOT_STARTED');
 
 -- MATCHES
 INSERT INTO "match" (id, stadium, match_datetime, status, score_home, score_away, season_id, club_home_id, club_away_id) VALUES
-('match-2024-001', 'Mahamasina', '2024-04-01 15:00:00', 'FINISHED', 2, 1,
+('54612378-aaaa-bbbb-cccc-424242445142', 'Mahamasina', '2024-04-01 15:00:00', 'FINISHED', 2, 1,
  '55555555-aaaa-bbbb-cccc-111111111111', 'a3e11b02-9be6-41a0-bc22-111111111111', 'a3e11b02-9be6-41a0-bc22-222222222222');
 
 -- MATCH_PLAYER

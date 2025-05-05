@@ -11,197 +11,136 @@ import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Repository
 @RequiredArgsConstructor
-public abstract class PlayerRepository implements BaseRepository<PlayerEntity, UUID> {
+public class PlayerRepository {
+    
     private final CustomDataSource dataSource;
 
-    @Override
-    public Optional<PlayerEntity> findById(UUID id) {
-        String sql = "SELECT p.*, c.id as club_id, c.name as club_name FROM players p " +
-                    "LEFT JOIN clubs c ON p.current_club_id = c.id " +
-                    "WHERE p.id = ?";
-        try (Connection conn = dataSource.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setObject(1, id);
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
-                return Optional.of(mapResultSetToPlayer(rs));
-            }
-            return Optional.empty();
-        } catch (SQLException e) {
-            throw new RuntimeException("Error finding player by id", e);
-        }
-    }
-
-    @Override
     public List<PlayerEntity> findAll() {
-        String sql = "SELECT p.*, c.id as club_id, c.name as club_name FROM players p " +
-                    "LEFT JOIN clubs c ON p.current_club_id = c.id";
-        List<PlayerEntity> players = new ArrayList<>();
-        try (Connection conn = dataSource.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
-            while (rs.next()) {
-                players.add(mapResultSetToPlayer(rs));
-            }
-            return players;
-        } catch (SQLException e) {
-            throw new RuntimeException("Error finding all players", e);
-        }
+        return findAll(null);
     }
 
-    @Override
-    public List<PlayerEntity> findAll(Filter filter) {
-        StringBuilder sql = new StringBuilder(
-                "SELECT p.*, c.id as club_id, c.name as club_name FROM players p " +
-                        "LEFT JOIN clubs c ON p.current_club_id = c.id"
-        );
-
+    public List<PlayerEntity> findAll(FilterPlayer filter) {
+        StringBuilder sql = new StringBuilder("SELECT p.*, c.* FROM player p JOIN club c ON p.current_club_id = c.id");
         List<Object> params = new ArrayList<>();
-        if (filter != null && !filter.getCriteria().isEmpty()) {
-            sql.append(" WHERE ");
-            for (int i = 0; i < filter.getCriteria().size(); i++) {
-                FilterCriteria criteria = filter.getCriteria().get(i);
-                if (i > 0) {
-                    sql.append(" AND ");
-                }
-
-                switch (criteria.getOperation()) {
-                    case EQUALS:
-                        sql.append("p.").append(criteria.getField()).append(" = ?");
-                        params.add(criteria.getValue());
-                        break;
-                    case NOT_EQUALS:
-                        sql.append("p.").append(criteria.getField()).append(" != ?");
-                        params.add(criteria.getValue());
-                        break;
-                    case GREATER_THAN:
-                        sql.append("p.").append(criteria.getField()).append(" > ?");
-                        params.add(criteria.getValue());
-                        break;
-                    case LESS_THAN:
-                        sql.append("p.").append(criteria.getField()).append(" < ?");
-                        params.add(criteria.getValue());
-                        break;
-                    case GREATER_THAN_OR_EQUALS:
-                        sql.append("p.").append(criteria.getField()).append(" >= ?");
-                        params.add(criteria.getValue());
-                        break;
-                    case LESS_THAN_OR_EQUALS:
-                        sql.append("p.").append(criteria.getField()).append(" <= ?");
-                        params.add(criteria.getValue());
-                        break;
-                    case LIKE:
-                        sql.append("p.").append(criteria.getField()).append(" LIKE ?");
-                        params.add("%" + criteria.getValue() + "%");
-                        break;
-                    case IN:
-                        sql.append("p.").append(criteria.getField()).append(" IN (?)");
-                        params.add(criteria.getValue());
-                        break;
-                    case IS_NULL:
-                        sql.append("p.").append(criteria.getField()).append(" IS NULL");
-                        break;
-                    case IS_NOT_NULL:
-                        sql.append("p.").append(criteria.getField()).append(" IS NOT NULL");
-                        break;
-                }
+        
+        if (filter != null) {
+            sql.append(" WHERE 1=1");
+            if (filter.getName() != null) {
+                sql.append(" AND LOWER(p.name) LIKE LOWER(?)");
+                params.add("%" + filter.getName() + "%");
+            }
+            if (filter.getAgeMinimum() != null) {
+                sql.append(" AND p.age >= ?");
+                params.add(filter.getAgeMinimum());
+            }
+            if (filter.getAgeMaximum() != null) {
+                sql.append(" AND p.age <= ?");
+                params.add(filter.getAgeMaximum());
+            }
+            if (filter.getClubName() != null) {
+                sql.append(" AND LOWER(c.name) LIKE LOWER(?)");
+                params.add("%" + filter.getClubName() + "%");
             }
         }
 
-        if (filter != null && !filter.getOrderBy().isEmpty()) {
-            sql.append(" ORDER BY ");
-            sql.append(String.join(", ", filter.getOrderBy().stream()
-                    .map(field -> "p." + field)
-                    .toList()));
-        }
-
-        List<PlayerEntity> players = new ArrayList<>();
         try (Connection conn = dataSource.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql.toString())) {
-
+            
             for (int i = 0; i < params.size(); i++) {
                 stmt.setObject(i + 1, params.get(i));
             }
-
+            
             ResultSet rs = stmt.executeQuery();
+            List<PlayerEntity> player = new ArrayList<>();
+            
             while (rs.next()) {
-                players.add(mapResultSetToPlayer(rs));
+                player.add(mapResultSetToPlayer(rs));
             }
-            return players;
+            
+            return player;
+            
         } catch (SQLException e) {
-            throw new RuntimeException("Error finding players with filter", e);
+            throw new RuntimeException("Error finding all player", e);
         }
     }
 
-    @Override
-    public PlayerEntity save(PlayerEntity player) {
-        String sql = "INSERT INTO players (id, name, number, position, nationality, age, created_at, updated_at, current_club_id) " +
-                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) " +
-                    "ON CONFLICT (id) DO UPDATE SET " +
-                    "name = EXCLUDED.name, " +
-                    "number = EXCLUDED.number, " +
-                    "position = EXCLUDED.position, " +
-                    "nationality = EXCLUDED.nationality, " +
-                    "age = EXCLUDED.age, " +
-                    "updated_at = ?, " +
-                    "current_club_id = EXCLUDED.current_club_id " +
-                    "RETURNING *";
-        
+    public PlayerEntity save(PlayerEntity entity) {
+        if (entity.getId() == null) {
+            return insert(entity);
+        }
+        return update(entity);
+    }
+
+    public List<PlayerEntity> saveAll(List<PlayerEntity> entities) {
+        List<PlayerEntity> savedEntities = new ArrayList<>();
+        for (PlayerEntity entity : entities) {
+            savedEntities.add(save(entity));
+        }
+        return savedEntities;
+    }
+
+    private PlayerEntity insert(PlayerEntity entity) {
+        String sql = "INSERT INTO player (id, name, number, position, nationality, age, created_at, updated_at, current_club_id) " +
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
         try (Connection conn = dataSource.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
+            
+            UUID id = UUID.randomUUID();
             LocalDateTime now = LocalDateTime.now();
-            UUID playerId = player.getId() != null ? player.getId() : UUID.randomUUID();
             
-            stmt.setObject(1, playerId);
-            stmt.setString(2, player.getName());
-            stmt.setLong(3, player.getNumber());
-            stmt.setString(4, player.getPosition().name());
-            stmt.setString(5, player.getNationality());
-            stmt.setLong(6, player.getAge());
-            stmt.setObject(7, player.getCreatedAt() != null ? player.getCreatedAt() : now);
-            stmt.setObject(8, now);
-            stmt.setObject(9, player.getCurrentClub() != null ? player.getCurrentClub().getId() : null);
-            stmt.setObject(10, now);
+            stmt.setObject(1, id);
+            stmt.setString(2, entity.getName());
+            stmt.setLong(3, entity.getNumber());
+            stmt.setString(4, entity.getPosition().name());
+            stmt.setString(5, entity.getNationality());
+            stmt.setLong(6, entity.getAge());
+            stmt.setTimestamp(7, Timestamp.valueOf(now));
+            stmt.setTimestamp(8, Timestamp.valueOf(now));
+            stmt.setObject(9, entity.getCurrentClub() != null ? entity.getCurrentClub().getId() : null);
             
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
-                return mapResultSetToPlayer(rs);
-            }
-            throw new RuntimeException("Failed to save player");
+            stmt.executeUpdate();
+            
+            entity.setId(id);
+            entity.setCreatedAt(now);
+            entity.setUpdatedAt(now);
+            return entity;
+            
         } catch (SQLException e) {
-            throw new RuntimeException("Error saving player", e);
+            throw new RuntimeException("Error inserting player", e);
         }
     }
 
-    @Override
-    public List<PlayerEntity> saveAll(List<PlayerEntity> players) {
-        List<PlayerEntity> savedPlayers = new ArrayList<>();
-        for (PlayerEntity player : players) {
-            savedPlayers.add(save(player));
-        }
-        return savedPlayers;
-    }
+    private PlayerEntity update(PlayerEntity entity) {
+        String sql = "UPDATE player SET name = ?, number = ?, position = ?, nationality = ?, age = ?, " +
+                    "updated_at = ?, current_club_id = ? WHERE id = ?";
 
-    @Override
-    public void deleteById(UUID id) {
-        String sql = "DELETE FROM players WHERE id = ?";
         try (Connection conn = dataSource.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setObject(1, id);
+            
+            LocalDateTime now = LocalDateTime.now();
+            
+            stmt.setString(1, entity.getName());
+            stmt.setLong(2, entity.getNumber());
+            stmt.setString(3, entity.getPosition().name());
+            stmt.setString(4, entity.getNationality());
+            stmt.setLong(5, entity.getAge());
+            stmt.setTimestamp(6, Timestamp.valueOf(now));
+            stmt.setObject(7, entity.getCurrentClub() != null ? entity.getCurrentClub().getId() : null);
+            stmt.setObject(8, entity.getId());
+            
             stmt.executeUpdate();
+            
+            entity.setUpdatedAt(now);
+            return entity;
+            
         } catch (SQLException e) {
-            throw new RuntimeException("Error deleting player", e);
+            throw new RuntimeException("Error updating player", e);
         }
-    }
-
-    @Override
-    public boolean existsById(UUID id) {
-        return findById(id).isPresent();
     }
 
     private PlayerEntity mapResultSetToPlayer(ResultSet rs) throws SQLException {
@@ -211,19 +150,10 @@ public abstract class PlayerRepository implements BaseRepository<PlayerEntity, U
         player.setNumber(rs.getLong("number"));
         player.setPosition(PlayerPosition.valueOf(rs.getString("position")));
         player.setNationality(rs.getString("nationality"));
-        player.setAge(rs.getLong("age"));
-        player.setCreatedAt(rs.getObject("created_at", LocalDateTime.class));
-        player.setUpdatedAt(rs.getObject("updated_at", LocalDateTime.class));
-
-        // Map club if exists
-        UUID clubId = (UUID) rs.getObject("club_id");
-        if (clubId != null) {
-            ClubEntity club = new ClubEntity();
-            club.setId(clubId);
-            club.setName(rs.getString("club_name"));
-            player.setCurrentClub(club);
-        }
-
+        player.setAge(rs.getInt("age"));
+        player.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
+        player.setUpdatedAt(rs.getTimestamp("updated_at").toLocalDateTime());
+        
         return player;
     }
 }

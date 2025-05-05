@@ -2,22 +2,27 @@ package com.football_championship_api.demo.controller;
 
 import com.football_championship_api.demo.data.entity.PlayerEntity;
 import com.football_championship_api.demo.data.entity.PlayerStatistics;
+import com.football_championship_api.demo.service.PlayerService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/players")
 public class PlayerController {
+    private final PlayerService playerService;
+
     @GetMapping
     public ResponseEntity<List<PlayerEntity>> getPlayers(
-            @RequestParam(required = false) String name,
-            @RequestParam(required = false) Integer ageMinimum,
-            @RequestParam(required = false) Integer ageMaximum,
-            @RequestParam(required = false) String clubName
+            @RequestParam(name = "name", required = false) String name,
+            @RequestParam(name = "ageMinimum", required = false) int ageMinimum,
+            @RequestParam(name = "ageMaximum", required = false) int ageMaximum,
+            @RequestParam(name = "clubName", required = false) String clubName
     ) {
-        throw new UnsupportedOperationException("Not yet implemented");
+        return ResponseEntity.ok(playerService.getPlayers(name, ageMinimum, ageMaximum, clubName));
     }
 
     @PutMapping

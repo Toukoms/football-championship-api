@@ -7,12 +7,12 @@
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>3.4.4</version>
-		<relativePath /> <!-- lookup parent from repository -->
+		<relativePath /> <!-- lookup parent from a repository -->
 	</parent>
-	<groupId>com.gastronakay</groupId>
-	<artifactId>gastro_nakay</artifactId>
+	<groupId>com.football_championship_api</groupId>
+	<artifactId>football_championship_api</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>gastro_nakay</name>
+	<name>football_championship_api</name>
 	<description>Demo project for Spring Boot</description>
 	<url />
 	<licenses>
@@ -64,6 +64,7 @@
 							<artifactId>lombok</artifactId>
 						</path>
 					</annotationProcessorPaths>
+					<parameters>true</parameters>
 				</configuration>
 			</plugin>
 			<plugin>

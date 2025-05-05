@@ -1,0 +1,128 @@
+{
+  "info": {
+    "name": "Football Championship API - DEV",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Get all players",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/players",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "players"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Create players",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "[\n  {\n    \"id\": \"c0ffee00-0000-0000-0000-000000000001\",\n    \"name\": \"Rabe Toto\",\n    \"number\": 9,\n    \"position\": \"STRIKER\",\n    \"nationality\": \"Madagascar\",\n    \"age\": 24\n  }\n]"
+        },
+        "url": {
+          "raw": "http://localhost:8080/players",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "players"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Create season",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "[\n  {\n    \"year\": 2024,\n    \"alias\": \"S2024-2025\"\n  }\n]"
+        },
+        "url": {
+          "raw": "http://localhost:8080/seasons",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "seasons"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Update season status",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"status\": \"STARTED\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8080/seasons/2024/status",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "seasons",
+            "2024",
+            "status"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Create matches for season",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/matchMaker/2024",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "matchMaker",
+            "2024"
+          ]
+        }
+      }
+    }
+  ]
+}

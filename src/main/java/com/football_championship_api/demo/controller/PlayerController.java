@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -31,7 +32,10 @@ public class PlayerController {
     }
 
     @GetMapping("/{id}/statistics/{seasonYear}")
-    public ResponseEntity<List<PlayerStatistics>> getStatisticsOfPlayerById() {
-        throw new UnsupportedOperationException("Not yet implemented");
+    public ResponseEntity<PlayerStatistics> getStatisticsOfPlayerById(
+            @PathVariable UUID playerId,
+            @PathVariable Integer seasonYear
+    ) {
+        return ResponseEntity.ok(playerService.getStatisticsOfPlayerById(playerId, seasonYear));
     }
 }

@@ -12,7 +12,7 @@ import java.util.UUID;
 @NoArgsConstructor
 public class SeasonEntity {
     private UUID id;
-    private Long year;
+    private Integer year;
     private String alias;
     private String status;
     private LocalDateTime createdAt;

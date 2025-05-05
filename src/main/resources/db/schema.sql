@@ -38,7 +38,7 @@ CREATE TABLE player (
 -- SEASON
 CREATE TABLE season (
     id UUID PRIMARY KEY,
-    year BIGINT NOT NULL UNIQUE,
+    year INT NOT NULL UNIQUE,
     alias VARCHAR(24) NOT NULL,
     status VARCHAR(16) NOT NULL CHECK (status IN ('NOT_STARTED', 'STARTED', 'FINISHED')),
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -84,8 +84,8 @@ CREATE TABLE player_statistics (
     scored_goals BIGINT DEFAULT 0,
     playing_time_value BIGINT DEFAULT 0,
     playing_time_unit VARCHAR(12) CHECK (playing_time_unit IN ('SECOND', 'MINUTE', 'HOUR')),
-    player_id UUID NOT NULL REFERENCES player(id) ON DELETE CASCADE,
-    season_id UUID NOT NULL REFERENCES season(id) ON DELETE CASCADE,
+    player_id UUID NOT NULL REFERENCES player(id),
+    season_id UUID NOT NULL REFERENCES season(id),
     PRIMARY KEY (player_id, season_id)
 );
 
@@ -96,7 +96,7 @@ CREATE TABLE club_statistics (
     conceded_goals BIGINT DEFAULT 0,
     difference_goals BIGINT DEFAULT 0,
     clean_sheet_number BIGINT DEFAULT 0,
-    club_id UUID NOT NULL REFERENCES club(id) ON DELETE CASCADE,
-    season_id UUID NOT NULL REFERENCES season(id) ON DELETE CASCADE,
+    club_id UUID NOT NULL REFERENCES club(id),
+    season_id UUID NOT NULL REFERENCES season(id),
     PRIMARY KEY (club_id, season_id)
 );

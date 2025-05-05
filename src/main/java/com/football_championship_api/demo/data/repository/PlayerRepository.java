@@ -19,6 +19,22 @@ public class PlayerRepository {
     
     private final CustomDataSource dataSource;
 
+    public PlayerEntity findById(UUID playerId) {
+        String sql = "SELECT * FROM player WHERE id = ?";
+        try (Connection conn = dataSource.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setObject(1, playerId);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return mapResultSetToPlayer(rs);
+            }
+
+            return null;
+        } catch (SQLException e) {
+            throw new RuntimeException("Error finding player by id", e);
+        }
+    }
+
     public List<PlayerEntity> findAll() {
         return findAll(null);
     }
@@ -153,7 +169,9 @@ public class PlayerRepository {
         player.setAge(rs.getInt("age"));
         player.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
         player.setUpdatedAt(rs.getTimestamp("updated_at").toLocalDateTime());
-        
+        ClubEntity club = new ClubEntity();
+        club.setId((UUID) rs.getObject("current_club_id"));
+        player.setCurrentClub(club);
         return player;
     }
 }

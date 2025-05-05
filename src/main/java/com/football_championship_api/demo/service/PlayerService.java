@@ -1,7 +1,11 @@
 package com.football_championship_api.demo.service;
 
+import com.football_championship_api.demo.data.entity.ClubEntity;
+import com.football_championship_api.demo.data.entity.CoachEntity;
 import com.football_championship_api.demo.data.entity.PlayerEntity;
 import com.football_championship_api.demo.data.entity.PlayerStatistics;
+import com.football_championship_api.demo.data.repository.ClubRepository;
+import com.football_championship_api.demo.data.repository.CoachRepository;
 import com.football_championship_api.demo.data.repository.FilterPlayer;
 import com.football_championship_api.demo.data.repository.PlayerRepository;
 import lombok.RequiredArgsConstructor;
@@ -9,12 +13,15 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class PlayerService {
 
     private final PlayerRepository playerRepository;
+    private final ClubRepository clubRepository;
+    private final CoachRepository coachRepository;
 
     /**
      * Get a list of players with optional filters
@@ -36,7 +43,22 @@ public class PlayerService {
         filter.setAgeMinimum(ageMinimum);
         filter.setClubName(clubName);
 
-        return playerRepository.findAll(filter);
+        List<PlayerEntity> players = playerRepository.findAll(filter);
+
+        for (PlayerEntity player : players) {
+            if (player.getCurrentClub() != null) {
+                ClubEntity club = clubRepository.findById(player.getCurrentClub().getId());
+                if (club != null) {
+                    CoachEntity coach = coachRepository.findById(club.getCoach().getId());
+                    if (coach != null) {
+                        club.setCoach(coach);
+                    }
+                    player.setCurrentClub(club);
+                }
+            }
+        }
+
+        return players;
     }
 
     /**
@@ -57,10 +79,13 @@ public class PlayerService {
      * @param playerId   Player identifier
      * @param seasonYear Season year
      * @return Player statistics
-     * @throws ResourceNotFoundException if player or season not found
+     * @throws IllegalArgumentException if player or season not found
      */
-    public PlayerStatistics getStatisticsOfPlayerById(String playerId, LocalDate seasonYear) {
-        // TODO: Implement statistics retrieval logic
+    public PlayerStatistics getStatisticsOfPlayerById(UUID playerId, Integer seasonYear) {
+        if (playerId == null || seasonYear == null) {
+            throw new IllegalArgumentException("Player ID and season year must be provided");
+        }
+        PlayerEntity player = playerRepository.findById(playerId);
         return null;
     }
 }

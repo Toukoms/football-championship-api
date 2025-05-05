@@ -33,9 +33,9 @@ public class PlayerController {
 
     @GetMapping("/{id}/statistics/{seasonYear}")
     public ResponseEntity<PlayerStatistics> getStatisticsOfPlayerById(
-            @PathVariable UUID playerId,
+            @PathVariable UUID id,
             @PathVariable Integer seasonYear
     ) {
-        return ResponseEntity.ok(playerService.getStatisticsOfPlayerById(playerId, seasonYear));
+        return ResponseEntity.ok(playerService.getStatisticsOfPlayerById(id, seasonYear));
     }
 }

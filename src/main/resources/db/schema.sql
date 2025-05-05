@@ -50,7 +50,7 @@ CREATE TABLE "match" (
     id UUID PRIMARY KEY,
     stadium VARCHAR(100),
     match_datetime TIMESTAMP,
-    status VARCHAR(20) NOT NULL CHECK (status IN ('NOT_STARTED', 'STARTED', 'FINISHED')),
+    status VARCHAR(16) NOT NULL CHECK (status IN ('NOT_STARTED', 'STARTED', 'FINISHED')),
     score_home BIGINT DEFAULT 0,
     score_away BIGINT DEFAULT 0,
     season_id UUID NOT NULL REFERENCES season(id) ON DELETE CASCADE,

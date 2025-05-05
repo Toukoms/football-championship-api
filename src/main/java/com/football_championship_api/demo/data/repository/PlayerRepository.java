@@ -1,7 +1,6 @@
 package com.football_championship_api.demo.data.repository;
 
 import com.football_championship_api.demo.config.CustomDataSource;
-import com.football_championship_api.demo.data.entity.ClubEntity;
 import com.football_championship_api.demo.data.entity.PlayerEntity;
 import com.football_championship_api.demo.data.entity.PlayerPosition;
 import lombok.RequiredArgsConstructor;
@@ -16,8 +15,9 @@ import java.util.UUID;
 @Repository
 @RequiredArgsConstructor
 public class PlayerRepository {
-    
+
     private final CustomDataSource dataSource;
+    private final ClubRepository clubRepository;
 
     public PlayerEntity findById(UUID playerId) {
         String sql = "SELECT * FROM player WHERE id = ?";
@@ -42,7 +42,7 @@ public class PlayerRepository {
     public List<PlayerEntity> findAll(FilterPlayer filter) {
         StringBuilder sql = new StringBuilder("SELECT p.*, c.* FROM player p JOIN club c ON p.current_club_id = c.id");
         List<Object> params = new ArrayList<>();
-        
+
         if (filter != null) {
             sql.append(" WHERE 1=1");
             if (filter.getName() != null) {
@@ -65,20 +65,20 @@ public class PlayerRepository {
 
         try (Connection conn = dataSource.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql.toString())) {
-            
+
             for (int i = 0; i < params.size(); i++) {
                 stmt.setObject(i + 1, params.get(i));
             }
-            
+
             ResultSet rs = stmt.executeQuery();
             List<PlayerEntity> player = new ArrayList<>();
-            
+
             while (rs.next()) {
                 player.add(mapResultSetToPlayer(rs));
             }
-            
+
             return player;
-            
+
         } catch (SQLException e) {
             throw new RuntimeException("Error finding all player", e);
         }
@@ -101,14 +101,14 @@ public class PlayerRepository {
 
     private PlayerEntity insert(PlayerEntity entity) {
         String sql = "INSERT INTO player (id, name, number, position, nationality, age, created_at, updated_at, current_club_id) " +
-                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = dataSource.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
-            
+
             UUID id = UUID.randomUUID();
             LocalDateTime now = LocalDateTime.now();
-            
+
             stmt.setObject(1, id);
             stmt.setString(2, entity.getName());
             stmt.setLong(3, entity.getNumber());
@@ -118,14 +118,14 @@ public class PlayerRepository {
             stmt.setTimestamp(7, Timestamp.valueOf(now));
             stmt.setTimestamp(8, Timestamp.valueOf(now));
             stmt.setObject(9, entity.getCurrentClub() != null ? entity.getCurrentClub().getId() : null);
-            
+
             stmt.executeUpdate();
-            
+
             entity.setId(id);
             entity.setCreatedAt(now);
             entity.setUpdatedAt(now);
             return entity;
-            
+
         } catch (SQLException e) {
             throw new RuntimeException("Error inserting player", e);
         }
@@ -133,13 +133,13 @@ public class PlayerRepository {
 
     private PlayerEntity update(PlayerEntity entity) {
         String sql = "UPDATE player SET name = ?, number = ?, position = ?, nationality = ?, age = ?, " +
-                    "updated_at = ?, current_club_id = ? WHERE id = ?";
+                "updated_at = ?, current_club_id = ? WHERE id = ?";
 
         try (Connection conn = dataSource.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
-            
+
             LocalDateTime now = LocalDateTime.now();
-            
+
             stmt.setString(1, entity.getName());
             stmt.setLong(2, entity.getNumber());
             stmt.setString(3, entity.getPosition().name());
@@ -148,12 +148,12 @@ public class PlayerRepository {
             stmt.setTimestamp(6, Timestamp.valueOf(now));
             stmt.setObject(7, entity.getCurrentClub() != null ? entity.getCurrentClub().getId() : null);
             stmt.setObject(8, entity.getId());
-            
+
             stmt.executeUpdate();
-            
+
             entity.setUpdatedAt(now);
             return entity;
-            
+
         } catch (SQLException e) {
             throw new RuntimeException("Error updating player", e);
         }
@@ -169,9 +169,7 @@ public class PlayerRepository {
         player.setAge(rs.getInt("age"));
         player.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
         player.setUpdatedAt(rs.getTimestamp("updated_at").toLocalDateTime());
-        ClubEntity club = new ClubEntity();
-        club.setId((UUID) rs.getObject("current_club_id"));
-        player.setCurrentClub(club);
+        player.setCurrentClub(clubRepository.findById((UUID) rs.getObject("current_club_id")));
         return player;
     }
 }

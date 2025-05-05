@@ -2,7 +2,6 @@ package com.football_championship_api.demo.data.repository;
 
 import com.football_championship_api.demo.config.CustomDataSource;
 import com.football_championship_api.demo.data.entity.ClubEntity;
-import com.football_championship_api.demo.data.entity.CoachEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -15,11 +14,13 @@ import java.util.UUID;
 @Repository
 @RequiredArgsConstructor
 public class ClubRepository {
+
     private final CustomDataSource dataSource;
+    private final CoachRepository coachRepository;
 
     public ClubEntity findById(UUID clubId) {
         String sql = "SELECT * FROM club WHERE id = ?";
-        try (Connection conn = dataSource.getConnection();PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection conn = dataSource.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setObject(1, clubId);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
@@ -39,9 +40,7 @@ public class ClubRepository {
         club.setStadium(rs.getString("stadium"));
         club.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
         club.setUpdatedAt(rs.getTimestamp("updated_at").toLocalDateTime());
-        CoachEntity coach = new CoachEntity();
-        coach.setId((UUID) rs.getObject("coach_id"));
-        club.setCoach(coach);
+        club.setCoach(coachRepository.findById((UUID) rs.getObject("coach_id")));
         return club;
     }
 }

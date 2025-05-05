@@ -1,17 +1,11 @@
 package com.football_championship_api.demo.service;
 
-import com.football_championship_api.demo.data.entity.ClubEntity;
-import com.football_championship_api.demo.data.entity.CoachEntity;
 import com.football_championship_api.demo.data.entity.PlayerEntity;
 import com.football_championship_api.demo.data.entity.PlayerStatistics;
-import com.football_championship_api.demo.data.repository.ClubRepository;
-import com.football_championship_api.demo.data.repository.CoachRepository;
-import com.football_championship_api.demo.data.repository.FilterPlayer;
-import com.football_championship_api.demo.data.repository.PlayerRepository;
+import com.football_championship_api.demo.data.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -22,6 +16,7 @@ public class PlayerService {
     private final PlayerRepository playerRepository;
     private final ClubRepository clubRepository;
     private final CoachRepository coachRepository;
+    private final PlayerStatisticsRepository playerStatisticsRepository;
 
     /**
      * Get a list of players with optional filters
@@ -43,22 +38,7 @@ public class PlayerService {
         filter.setAgeMinimum(ageMinimum);
         filter.setClubName(clubName);
 
-        List<PlayerEntity> players = playerRepository.findAll(filter);
-
-        for (PlayerEntity player : players) {
-            if (player.getCurrentClub() != null) {
-                ClubEntity club = clubRepository.findById(player.getCurrentClub().getId());
-                if (club != null) {
-                    CoachEntity coach = coachRepository.findById(club.getCoach().getId());
-                    if (coach != null) {
-                        club.setCoach(coach);
-                    }
-                    player.setCurrentClub(club);
-                }
-            }
-        }
-
-        return players;
+        return playerRepository.findAll(filter);
     }
 
     /**
@@ -86,6 +66,8 @@ public class PlayerService {
             throw new IllegalArgumentException("Player ID and season year must be provided");
         }
         PlayerEntity player = playerRepository.findById(playerId);
-        return null;
+        PlayerStatistics playerStatistics = playerStatisticsRepository.getStatisticsOfPlayerById(playerId, seasonYear);
+        playerStatistics.setPlayer(player);
+        return playerStatistics;
     }
 }

@@ -14,7 +14,7 @@ public class SeasonEntity {
     private UUID id;
     private Integer year;
     private String alias;
-    private String status;
+    private PlayingStatus status;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }

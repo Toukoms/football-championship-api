@@ -1,7 +1,7 @@
 package com.football_championship_api.demo.service;
 
 import com.football_championship_api.demo.data.entity.PlayerEntity;
-import com.football_championship_api.demo.data.entity.PlayerStatistics;
+import com.football_championship_api.demo.data.entity.PlayerStatisticsEntity;
 import com.football_championship_api.demo.data.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -61,13 +61,13 @@ public class PlayerService {
      * @return Player statistics
      * @throws IllegalArgumentException if player or season not found
      */
-    public PlayerStatistics getStatisticsOfPlayerById(UUID playerId, Integer seasonYear) {
+    public PlayerStatisticsEntity getStatisticsOfPlayerById(UUID playerId, Integer seasonYear) {
         if (playerId == null || seasonYear == null) {
             throw new IllegalArgumentException("Player ID and season year must be provided");
         }
         PlayerEntity player = playerRepository.findById(playerId);
-        PlayerStatistics playerStatistics = playerStatisticsRepository.getStatisticsOfPlayerById(playerId, seasonYear);
-        playerStatistics.setPlayer(player);
-        return playerStatistics;
+        PlayerStatisticsEntity playerStatisticsEntity = playerStatisticsRepository.getStatisticsOfPlayerById(playerId, seasonYear);
+        playerStatisticsEntity.setPlayer(player);
+        return playerStatisticsEntity;
     }
 }

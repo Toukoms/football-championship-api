@@ -9,6 +9,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Repository
@@ -17,6 +19,20 @@ public class ClubRepository {
 
     private final CustomDataSource dataSource;
     private final CoachRepository coachRepository;
+
+    public List<ClubEntity> findAll() {
+        String sql = "SELECT * FROM club ORDER BY name ASC";
+        try (Connection conn = dataSource.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+            ResultSet rs = stmt.executeQuery();
+            List<ClubEntity> clubs = new ArrayList<>();
+            while (rs.next()) {
+                clubs.add(mapResultSetToClub(rs));
+            }
+            return clubs;
+        } catch (SQLException e) {
+            throw new RuntimeException("Error finding all clubs", e);
+        }
+    }
 
     public ClubEntity findById(UUID clubId) {
         String sql = "SELECT * FROM club WHERE id = ?";

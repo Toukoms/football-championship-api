@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class PlayerStatistics {
+public class PlayerStatisticsEntity {
     private Long scoredGoals = 0L;
     private Long playingTimeValue;
     private PlayingTimeUnit playingTimeUnit;

@@ -1,7 +1,7 @@
 package com.football_championship_api.demo.controller;
 
 import com.football_championship_api.demo.data.entity.PlayerEntity;
-import com.football_championship_api.demo.data.entity.PlayerStatistics;
+import com.football_championship_api.demo.data.entity.PlayerStatisticsEntity;
 import com.football_championship_api.demo.service.PlayerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -32,7 +32,7 @@ public class PlayerController {
     }
 
     @GetMapping("/{id}/statistics/{seasonYear}")
-    public ResponseEntity<PlayerStatistics> getStatisticsOfPlayerById(
+    public ResponseEntity<PlayerStatisticsEntity> getStatisticsOfPlayerById(
             @PathVariable UUID id,
             @PathVariable Integer seasonYear
     ) {

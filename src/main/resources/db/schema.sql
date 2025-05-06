@@ -1,4 +1,8 @@
-CREATE DATABASE football_central;
+CREATE DATABASE foot_central;
+
+
+CREATE TYPE championship_type AS ENUM ('PREMIER_LEAGUE', 'LA_LIGA', 'BUNDESLIGA', 'SERIA', 'LIGUE_1');
+
 
 CREATE TABLE coach (
     id UUID PRIMARY KEY,
@@ -15,7 +19,6 @@ CREATE TABLE club (
     stadium VARCHAR(128),
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-
     coach_id UUID REFERENCES coach(id)
 );
 
@@ -25,10 +28,9 @@ CREATE TABLE player (
     number INTEGER,
     position VARCHAR(16) CHECK (position IN ('STRIKER', 'MIDFIELDER', 'DEFENSE', 'GOAL_KEEPER')),
     nationality VARCHAR(50),
-    age INTEGER CHECK (age BETWEEN 0 and 80),
+    age INTEGER CHECK (age BETWEEN 0 AND 80),
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-
     current_club_id UUID REFERENCES club(id)
 );
 
@@ -36,11 +38,10 @@ CREATE TABLE season (
     id UUID PRIMARY KEY,
     year INTEGER NOT NULL,
     alias VARCHAR(24) NOT NULL,
-    status VARCHAR(16) NOT NULL CHECK (status IN ('NOT_STARTED', 'STARTED', 'FINISHED'))
+    status VARCHAR(16) NOT NULL CHECK (status IN ('NOT_STARTED', 'STARTED', 'FINISHED')),
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
-
 
 CREATE TABLE player_ranking (
     player_id UUID NOT NULL REFERENCES player(id),
@@ -60,8 +61,3 @@ CREATE TABLE club_ranking (
     clean_sheet_number INTEGER DEFAULT 0,
     PRIMARY KEY (club_id)
 );
-
-
-CREATE TYPE championship_type AS ENUM ( 'PREMIER_LEAGUE', 'LA_LIGA','BUNDESLIGA', 'SERIA','LIGUE_1');
-
-

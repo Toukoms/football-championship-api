@@ -28,8 +28,10 @@ public class ClubController {
     }
 
     @GetMapping("/{id}/players")
-    public ResponseEntity<List<PlayerEntity>> getPlayersOfClubById() {
-        throw new UnsupportedOperationException("Not yet implemented");
+    public ResponseEntity<List<PlayerEntity>> getPlayersOfClubById(
+            @PathVariable UUID id
+    ) {
+        return ResponseEntity.ok(clubService.getPlayersOfClubById(id));
     }
 
     @PutMapping("/{id}/players")

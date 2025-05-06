@@ -19,6 +19,21 @@ public class PlayerRepository {
     private final CustomDataSource dataSource;
     private final ClubRepository clubRepository;
 
+    public List<PlayerEntity> getPlayersOfClubById(UUID clubId) {
+        String sql = "SELECT * FROM player JOIN club ON player.current_club_id = club.id WHERE club.id = ?";
+        try (Connection conn = dataSource.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setObject(1, clubId);
+            ResultSet rs = stmt.executeQuery();
+            List<PlayerEntity> players = new ArrayList<>();
+            while (rs.next()) {
+                players.add(mapResultSetToPlayer(rs));
+            }
+            return players;
+        } catch (SQLException e) {
+            throw new RuntimeException("Error finding players of club by id", e);
+        }
+    }
+
     public PlayerEntity findById(UUID playerId) {
         String sql = "SELECT * FROM player WHERE id = ?";
         try (Connection conn = dataSource.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {

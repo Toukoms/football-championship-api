@@ -19,7 +19,7 @@ public class ClubRepository {
 
     private final CustomDataSource dataSource;
     private final CoachRepository coachRepository;
-
+    
     public List<ClubEntity> findAll() {
         String sql = "SELECT * FROM club ORDER BY name ASC";
         try (Connection conn = dataSource.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {

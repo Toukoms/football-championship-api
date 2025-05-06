@@ -95,7 +95,7 @@ public class PlayerRepository {
             return player;
 
         } catch (SQLException e) {
-            throw new RuntimeException("Error finding all player", e);
+            throw new RuntimeException("Error finding all player with filters : " + sql, e);
         }
     }
 

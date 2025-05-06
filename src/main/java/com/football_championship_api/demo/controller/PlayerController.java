@@ -4,6 +4,7 @@ import com.football_championship_api.demo.data.entity.PlayerEntity;
 import com.football_championship_api.demo.data.entity.PlayerStatisticsEntity;
 import com.football_championship_api.demo.service.PlayerService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,8 +28,14 @@ public class PlayerController {
     }
 
     @PutMapping
-    public ResponseEntity<PlayerEntity> createOrUpdatePlayers() {
-        throw new UnsupportedOperationException("Not yet implemented");
+    public ResponseEntity<Object> createOrUpdatePlayers(
+            @RequestBody List<PlayerEntity> players
+    ) {
+        try {
+            return ResponseEntity.ok(playerService.createOrUpdatePlayers(players));
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>("Player with the same name and number already exist", HttpStatus.BAD_REQUEST);
+        }
     }
 
     @GetMapping("/{id}/statistics/{seasonYear}")

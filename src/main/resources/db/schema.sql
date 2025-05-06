@@ -32,7 +32,8 @@ CREATE TABLE player (
     age INT CHECK (age BETWEEN 0 AND 80),
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    current_club_id UUID REFERENCES club(id) ON DELETE SET NULL
+    current_club_id UUID REFERENCES club(id) ON DELETE SET NULL,
+    CONSTRAINT  unique_player UNIQUE(name, number)
 );
 
 -- SEASON
@@ -76,7 +77,6 @@ CREATE TABLE goal (
     match_id UUID NOT NULL REFERENCES "match"(id) ON DELETE CASCADE,
     club_id UUID NOT NULL REFERENCES club(id) ON DELETE CASCADE,
     player_id UUID NOT NULL REFERENCES player(id) ON DELETE CASCADE
-    -- Removed the constraint that requires the player to be in match_player
 );
 
 -- PLAYER_STATISTICS

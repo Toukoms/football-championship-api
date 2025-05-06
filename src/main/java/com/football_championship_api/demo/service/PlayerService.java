@@ -2,7 +2,9 @@ package com.football_championship_api.demo.service;
 
 import com.football_championship_api.demo.data.entity.PlayerEntity;
 import com.football_championship_api.demo.data.entity.PlayerStatisticsEntity;
-import com.football_championship_api.demo.data.repository.*;
+import com.football_championship_api.demo.data.repository.FilterPlayer;
+import com.football_championship_api.demo.data.repository.PlayerRepository;
+import com.football_championship_api.demo.data.repository.PlayerStatisticsRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,8 +16,6 @@ import java.util.UUID;
 public class PlayerService {
 
     private final PlayerRepository playerRepository;
-    private final ClubRepository clubRepository;
-    private final CoachRepository coachRepository;
     private final PlayerStatisticsRepository playerStatisticsRepository;
 
     /**
@@ -48,8 +48,7 @@ public class PlayerService {
      * @return List of created/updated players
      */
     public List<PlayerEntity> createOrUpdatePlayers(List<PlayerEntity> players) {
-        // TODO: Implement create/update logic
-        return List.of();
+        return playerRepository.saveAll(players);
     }
 
     /**

@@ -103,6 +103,10 @@ public class PlayerRepository {
         if (entity.getId() == null) {
             return insert(entity);
         }
+        PlayerEntity existingPlayer = findById(entity.getId());
+        if (existingPlayer == null) {
+            return insert(entity);
+        }
         return update(entity);
     }
 

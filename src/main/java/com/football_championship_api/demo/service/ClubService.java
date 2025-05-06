@@ -33,4 +33,8 @@ public class ClubService {
     public List<PlayerEntity> getPlayersOfClubById(UUID clubId) {
         return playerRepository.getPlayersOfClubById(clubId);
     }
+
+    public List<ClubEntity> createOrUpdateClubs(List<ClubEntity> clubs) {
+        return clubRepository.saveAll(clubs);
+    }
 }

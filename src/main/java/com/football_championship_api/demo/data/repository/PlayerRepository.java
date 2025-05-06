@@ -10,7 +10,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -109,7 +108,6 @@ public class PlayerRepository {
 
         try (Connection conn = dataSource.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
             UUID id = UUID.randomUUID();
-            LocalDateTime now = LocalDateTime.now();
 
             stmt.setObject(1, id);
             stmt.setString(2, entity.getName());

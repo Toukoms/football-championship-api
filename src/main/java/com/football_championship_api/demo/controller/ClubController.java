@@ -23,8 +23,10 @@ public class ClubController {
     }
 
     @PutMapping
-    public ResponseEntity<List<ClubEntity>> createOrUpdateClubs() {
-        throw new UnsupportedOperationException("Not yet implemented");
+    public ResponseEntity<List<ClubEntity>> createOrUpdateClubs(
+            @RequestBody List<ClubEntity> clubs
+    ) {
+        return ResponseEntity.ok(clubService.createOrUpdateClubs(clubs));
     }
 
     @GetMapping("/{id}/players")

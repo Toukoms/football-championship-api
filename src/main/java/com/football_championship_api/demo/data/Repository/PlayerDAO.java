@@ -32,7 +32,7 @@ public class PlayerDAO implements GeneralDAO<Player>{
             stmt.setObject(1, player.getId());
             stmt.setString(2, player.getName());
             stmt.setInt(3, player.getNumber());
-            stmt.setString(4, player.getPosition().name()); // enum en string
+            stmt.setString(4, player.getPosition().name());
             stmt.setString(5, player.getNationality());
             stmt.setInt(6, player.getAge());
             stmt.setObject(7, player.getCurrentClub().getId());

@@ -14,7 +14,7 @@ public class Club {
     private UUID id;
     private String name;
     private String acronym;
-    private LocalDateTime yearCreation;
+    private int yearCreation;
     private String stadium;
     private Coach coach;
 }

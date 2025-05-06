@@ -19,6 +19,14 @@ public class ClubRanking {
     private int differenceGoals;
     private int cleanSheetNumber;
 
+    public ClubRanking(Club club, int rankingPoints, int scoredGoals, int concededGoals, int differenceGoals, int cleanSheetNumber) {
+        this.club = club;
+        this.rankingPoints = rankingPoints;
+        this.scoredGoals = scoredGoals;
+        this.concededGoals = concededGoals;
+        this.differenceGoals = differenceGoals;
+        this.cleanSheetNumber = cleanSheetNumber;
+    }
 
     public void setScoredGoals(int scoredGoals) {
         this.scoredGoals = scoredGoals;
@@ -34,4 +42,6 @@ public class ClubRanking {
     private void updateDifferenceGoals() {
         this.differenceGoals = this.scoredGoals - this.concededGoals;
     }
+
+
 }

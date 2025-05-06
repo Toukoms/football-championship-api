@@ -2,14 +2,12 @@ package com.football_championship_api.demo.data.Service;
 
 
 import com.football_championship_api.demo.data.Client.ExternalApiClient;
-import com.football_championship_api.demo.data.DTO.ClubDTO;
-import com.football_championship_api.demo.data.DTO.ClubStatDTO;
-import com.football_championship_api.demo.data.DTO.PlayerDTO;
-import com.football_championship_api.demo.data.DTO.PlayerStatDTO;
-import com.football_championship_api.demo.data.Mapper.ClubMapper;
-import com.football_championship_api.demo.data.Mapper.ClubStatisticsMapper;
-import com.football_championship_api.demo.data.Mapper.PlayerMapper;
-import com.football_championship_api.demo.data.Mapper.PlayerStatisticsMapper;
+import com.football_championship_api.demo.data.DTO.*;
+import com.football_championship_api.demo.data.Mapper.*;
+import com.football_championship_api.demo.data.Repository.ClubDAO;
+import com.football_championship_api.demo.data.Repository.ClubRankingDAO;
+import com.football_championship_api.demo.data.Repository.PlayerDAO;
+import com.football_championship_api.demo.data.Repository.PlayerRankingDAO;
 import com.football_championship_api.demo.data.entity.Club;
 import com.football_championship_api.demo.data.entity.ClubRanking;
 import com.football_championship_api.demo.data.entity.Player;
@@ -28,11 +26,12 @@ public class SynchronizationService {
     private final ClubMapper clubMapper;
     private final ClubStatisticsMapper clubStatMapper;
     private final PlayerStatisticsMapper playerStatMapper;
+    private final SeasonMapper seasonMapper;
 
     private final PlayerDAO playerDAO;
     private final ClubDAO clubDAO;
     private final ClubRankingDAO clubRankingDAO;
-    private final pLayerRankingDAO playerRankingDAO;
+    private final PlayerRankingDAO playerRankingDAO;
 
 
     public void syncAllData() {

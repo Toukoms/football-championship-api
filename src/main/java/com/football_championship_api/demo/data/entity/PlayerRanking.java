@@ -13,8 +13,15 @@ import java.util.UUID;
 @Setter
 public class PlayerRanking {
     private int rank;
-    private Player player;
+    private UUID player;
     private Championship championship;
     private int scoredGoals;
     private PlayingTime playingTime;
+
+    public PlayerRanking(UUID player, int scoredGoals, PlayingTime playingTime) {
+        this.player = player;
+        this.scoredGoals = scoredGoals;
+        this.playingTime = playingTime;
+    }
+
 }

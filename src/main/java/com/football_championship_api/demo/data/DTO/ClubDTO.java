@@ -19,7 +19,7 @@ public class ClubDTO {
     private UUID id;
     private String name;
     private String acronym;
-    private LocalDateTime yearCreation;
+    private int yearCreation;
     private String stadium;
     private Coach coach;
 }

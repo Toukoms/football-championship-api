@@ -1,4 +1,21 @@
 package com.football_championship_api.demo.data.Mapper;
 
-public class ClubMapper {
+import com.football_championship_api.demo.data.DTO.ClubDTO;
+import com.football_championship_api.demo.data.entity.Club;
+
+public class ClubMapper implements Mapper<Club, ClubDTO> {
+
+    @Override
+    public Club toEntity(ClubDTO dto) {
+        Club club = new Club();
+
+        club.setId(dto.getId());
+        club.setName(dto.getName());
+        club.setAcronym(dto.getAcronym());
+        club.setYearCreation(dto.getYearCreation());
+        club.setStadium(dto.getStadium());
+        club.setCoach(dto.getCoach());
+
+        return club;
+    }
 }

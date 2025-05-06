@@ -6,7 +6,10 @@ import com.football_championship_api.demo.data.entity.PlayerPosition;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -100,31 +103,11 @@ public class PlayerRepository {
     }
 
     public PlayerEntity save(PlayerEntity entity) {
-        if (entity.getId() == null) {
-            return insert(entity);
-        }
-        PlayerEntity existingPlayer = findById(entity.getId());
-        if (existingPlayer == null) {
-            return insert(entity);
-        }
-        return update(entity);
-    }
+        String sql = "INSERT INTO player (id, name, number, position, nationality, age, current_club_id) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?) " +
+                "ON CONFLICT (name, number) DO UPDATE SET position = EXCLUDED.position, nationality = EXCLUDED.nationality, age = EXCLUDED.age, current_club_id = EXCLUDED.current_club_id, updated_at = NOW() RETURNING id";
 
-    public List<PlayerEntity> saveAll(List<PlayerEntity> entities) {
-        List<PlayerEntity> savedEntities = new ArrayList<>();
-        for (PlayerEntity entity : entities) {
-            savedEntities.add(save(entity));
-        }
-        return savedEntities;
-    }
-
-    private PlayerEntity insert(PlayerEntity entity) {
-        String sql = "INSERT INTO player (id, name, number, position, nationality, age, created_at, updated_at, current_club_id) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
-        try (Connection conn = dataSource.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-
+        try (Connection conn = dataSource.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
             UUID id = UUID.randomUUID();
             LocalDateTime now = LocalDateTime.now();
 
@@ -134,48 +117,24 @@ public class PlayerRepository {
             stmt.setString(4, entity.getPosition().name());
             stmt.setString(5, entity.getNationality());
             stmt.setLong(6, entity.getAge());
-            stmt.setTimestamp(7, Timestamp.valueOf(now));
-            stmt.setTimestamp(8, Timestamp.valueOf(now));
-            stmt.setObject(9, entity.getCurrentClub() != null ? entity.getCurrentClub().getId() : null);
+            stmt.setObject(7, entity.getCurrentClub() != null ? entity.getCurrentClub().getId() : null);
 
-            stmt.executeUpdate();
-
-            entity.setId(id);
-            entity.setCreatedAt(now);
-            entity.setUpdatedAt(now);
-            return entity;
-
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return findById((UUID) rs.getObject("id"));
+            }
+            return null;
         } catch (SQLException e) {
             throw new RuntimeException("Error inserting player", e);
         }
     }
 
-    private PlayerEntity update(PlayerEntity entity) {
-        String sql = "UPDATE player SET name = ?, number = ?, position = ?, nationality = ?, age = ?, " +
-                "updated_at = ?, current_club_id = ? WHERE id = ?";
-
-        try (Connection conn = dataSource.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-
-            LocalDateTime now = LocalDateTime.now();
-
-            stmt.setString(1, entity.getName());
-            stmt.setLong(2, entity.getNumber());
-            stmt.setString(3, entity.getPosition().name());
-            stmt.setString(4, entity.getNationality());
-            stmt.setLong(5, entity.getAge());
-            stmt.setTimestamp(6, Timestamp.valueOf(now));
-            stmt.setObject(7, entity.getCurrentClub() != null ? entity.getCurrentClub().getId() : null);
-            stmt.setObject(8, entity.getId());
-
-            stmt.executeUpdate();
-
-            entity.setUpdatedAt(now);
-            return entity;
-
-        } catch (SQLException e) {
-            throw new RuntimeException("Error updating player", e);
+    public List<PlayerEntity> saveAll(List<PlayerEntity> players) {
+        List<PlayerEntity> savedPlayers = new ArrayList<>();
+        for (PlayerEntity player : players) {
+            savedPlayers.add(save(player));
         }
+        return savedPlayers;
     }
 
     private PlayerEntity mapResultSetToPlayer(ResultSet rs) throws SQLException {

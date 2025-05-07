@@ -1,32 +1,28 @@
 package com.football_championship_api.demo.config;
 
+import io.github.cdimascio.dotenv.Dotenv;
 import org.springframework.context.annotation.Configuration;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.util.Optional;
+import java.sql.SQLException;
 
 @Configuration
 public class CustomDataSource {
-  private final String DB_NAME = System.getenv("DB_NAME");
-  private final String DB_HOST = Optional.ofNullable(System.getenv("DB_HOST")).orElse("localhost");
-  private final String DB_PORT = Optional.ofNullable(System.getenv("DB_PORT")).orElse("5432");
-  private final String DB_USERNAME = System.getenv("DB_USERNAME");
-  private final String DB_PASSWORD = System.getenv("DB_PASSWORD");
-  private String jdbcUrl;
 
-  public CustomDataSource() {
-    this.jdbcUrl = "jdbc:postgresql://" + DB_HOST + ":" + DB_PORT + "/" + DB_NAME;
-  }
+  private static final Dotenv dotenv = Dotenv.configure().load();
+
+  private static final String URL = dotenv.get("DB_URL");
+  private static final String USER = dotenv.get("DB_USER"); // Assure-toi que ta clé est bien DB_USER dans .env
+  private static final String PASSWORD = dotenv.get("DB_PASSWORD");
 
   public Connection getConnection() {
     try {
-      if (DB_NAME == null || DB_USERNAME == null || DB_PASSWORD == null) {
-        throw new IllegalArgumentException("Missing database connection credentials");
-      }
-      return DriverManager.getConnection(this.jdbcUrl, DB_USERNAME, DB_PASSWORD);
-    } catch (Exception e) {
-      throw new RuntimeException("Error connection to database: ", e);
+      return DriverManager.getConnection(URL, USER, PASSWORD);
+    } catch (SQLException e) {
+      System.out.println("Erreur de connexion à la base de données.");
+      e.printStackTrace();
+      return null;
     }
-  };
+  }
 }

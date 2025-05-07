@@ -17,7 +17,6 @@ public class PlayerEntity {
     private PlayerPosition position;
     private String nationality;
     private Integer age;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    private int createdAt;
     private ClubEntity currentClub;
 }

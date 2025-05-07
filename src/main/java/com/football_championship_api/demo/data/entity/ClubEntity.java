@@ -15,7 +15,6 @@ public class ClubEntity {
     private String name;
     private String acronym;
     private String stadium;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    private int createdAt;
     private CoachEntity coach;
 }

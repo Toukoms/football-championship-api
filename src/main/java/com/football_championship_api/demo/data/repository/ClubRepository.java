@@ -82,8 +82,7 @@ public class ClubRepository {
         club.setName(rs.getString("name"));
         club.setAcronym(rs.getString("acronym"));
         club.setStadium(rs.getString("stadium"));
-        club.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
-        club.setUpdatedAt(rs.getTimestamp("updated_at").toLocalDateTime());
+        club.setCreatedAt(rs.getInt("created_at"));
         club.setCoach(coachRepository.findById((UUID) rs.getObject("coach_id")));
         return club;
     }

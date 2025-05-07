@@ -127,8 +127,7 @@ public class SeasonRepository {
         season.setYear(rs.getInt("year"));
         season.setAlias(rs.getString("alias"));
         season.setStatus(PlayingStatus.valueOf(rs.getString("status")));
-        season.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
-        season.setUpdatedAt(rs.getTimestamp("updated_at").toLocalDateTime());
+        season.setCreatedAt(rs.getInt("created_at"));
         return season;
     }
 }

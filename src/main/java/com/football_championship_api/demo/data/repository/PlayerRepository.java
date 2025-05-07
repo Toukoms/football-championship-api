@@ -127,6 +127,7 @@ public class PlayerRepository {
         }
     }
 
+
     public List<PlayerEntity> saveAll(List<PlayerEntity> players) {
         List<PlayerEntity> savedPlayers = new ArrayList<>();
         for (PlayerEntity player : players) {
@@ -143,8 +144,7 @@ public class PlayerRepository {
         player.setPosition(PlayerPosition.valueOf(rs.getString("position")));
         player.setNationality(rs.getString("nationality"));
         player.setAge(rs.getInt("age"));
-        player.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
-        player.setUpdatedAt(rs.getTimestamp("updated_at").toLocalDateTime());
+        player.setCreatedAt(rs.getInt("created_at"));
         player.setCurrentClub(clubRepository.findById((UUID) rs.getObject("current_club_id")));
         return player;
     }

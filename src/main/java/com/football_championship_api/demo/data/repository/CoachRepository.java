@@ -32,8 +32,7 @@ public class CoachRepository {
         coach.setId((UUID) rs.getObject("id"));
         coach.setName(rs.getString("name"));
         coach.setNationality(rs.getString("nationality"));
-        coach.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
-        coach.setUpdatedAt(rs.getTimestamp("updated_at").toLocalDateTime());
+        coach.setCreatedAt(rs.getInt("created_at"));
         return coach;
     }
 }

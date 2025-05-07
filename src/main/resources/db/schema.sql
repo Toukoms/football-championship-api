@@ -6,8 +6,7 @@ CREATE TABLE coach (
     id UUID PRIMARY KEY,
     name VARCHAR(128) NOT NULL,
     nationality VARCHAR(56),
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+    created_at INTEGER NOT NULL
 );
 
 -- CLUB
@@ -15,9 +14,9 @@ CREATE TABLE club (
     id UUID PRIMARY KEY,
     name VARCHAR(128) NOT NULL UNIQUE,
     acronym VARCHAR(3) NOT NULL,
+    year_creation INTEGER,
     stadium VARCHAR(128),
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created_at INTEGER NOT NULL,
     coach_id UUID REFERENCES coach(id) ON DELETE SET NULL
 );
 
@@ -29,10 +28,8 @@ CREATE TABLE player (
     position VARCHAR(16) CHECK (position IN ('STRIKER', 'MIDFIELDER', 'DEFENSE', 'GOAL_KEEPER')),
     nationality VARCHAR(50),
     age INT CHECK (age BETWEEN 0 AND 80),
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    current_club_id UUID REFERENCES club(id) ON DELETE SET NULL,
-    CONSTRAINT  unique_player UNIQUE(name, number)
+    created_at INTEGER NOT NULL,
+    current_club_id UUID REFERENCES club(id) ON DELETE SET NULL
 );
 
 -- SEASON
@@ -40,9 +37,8 @@ CREATE TABLE season (
     id UUID PRIMARY KEY,
     year INT NOT NULL UNIQUE,
     alias VARCHAR(24) NOT NULL,
-    status VARCHAR(16) NOT NULL CHECK (status IN ('NOT_STARTED', 'STARTED', 'FINISHED')) DEFAULT 'NOT_STARTED',
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+    status VARCHAR(16) NOT NULL CHECK (status IN ('NOT_STARTED', 'STARTED', 'FINISHED')),
+    created_at INTEGER NOT NULL
 );
 
 -- MATCH
@@ -50,7 +46,7 @@ CREATE TABLE "match" (
     id UUID PRIMARY KEY,
     stadium VARCHAR(100),
     match_datetime TIMESTAMP,
-    status VARCHAR(16) NOT NULL CHECK (status IN ('NOT_STARTED', 'STARTED', 'FINISHED'))  DEFAULT 'NOT_STARTED',
+    status VARCHAR(16) NOT NULL CHECK (status IN ('NOT_STARTED', 'STARTED', 'FINISHED')),
     score_home BIGINT DEFAULT 0,
     score_away BIGINT DEFAULT 0,
     season_id UUID NOT NULL REFERENCES season(id) ON DELETE CASCADE,

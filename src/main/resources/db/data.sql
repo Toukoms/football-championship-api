@@ -1,22 +1,22 @@
 -- COACHES
-INSERT INTO coach (id, name, nationality) VALUES
-('eecf58b6-1a3a-4d24-bf4b-111111111111', 'Lucien', 'FRANCE'),
-('eecf58b6-1a3a-4d24-bf4b-222222222222', 'Franco', 'ITALY');
+INSERT INTO coach (id, name, nationality, created_at) VALUES
+('eecf58b6-1a3a-4d24-bf4b-111111111111', 'Lucien', 'FRANCE', 2024),
+('eecf58b6-1a3a-4d24-bf4b-222222222222', 'Franco', 'ITALY', 2024);
 
 -- CLUBS
-INSERT INTO club (id, name, acronym, stadium, coach_id) VALUES
-('a3e11b02-9be6-41a0-bc22-111111111111', 'AS Adema', 'ADA', 'Mahamasina', 'eecf58b6-1a3a-4d24-bf4b-111111111111'),
-('a3e11b02-9be6-41a0-bc22-222222222222', 'CNaPS Sport', 'CNS', 'Vontovorona', 'eecf58b6-1a3a-4d24-bf4b-222222222222');
+INSERT INTO club (id, name, acronym, year_creation, stadium, created_at, coach_id) VALUES
+('a3e11b02-9be6-41a0-bc22-111111111111', 'AS Adema', 'ADA', 2000, 'Mahamasina', 2024, 'eecf58b6-1a3a-4d24-bf4b-111111111111'),
+('a3e11b02-9be6-41a0-bc22-222222222222', 'CNaPS Sport', 'CNS', 2005, 'Vontovorona', 2024, 'eecf58b6-1a3a-4d24-bf4b-222222222222');
 
 -- PLAYERS
-INSERT INTO player (id, name, number, position, nationality, age, current_club_id) VALUES
-('1fd09d63-4eae-4d5a-aaaa-111111111111', 'Tiana Rakoto', 9, 'STRIKER', 'MADAGASCAR', 24, 'a3e11b02-9be6-41a0-bc22-111111111111'),
-('1fd09d63-4eae-4d5a-bbbb-222222222222', 'Marco Rami', 10, 'MIDFIELDER', 'MADAGASCAR', 27, 'a3e11b02-9be6-41a0-bc22-222222222222');
+INSERT INTO player (id, name, number, position, nationality, age, created_at, current_club_id) VALUES
+('1fd09d63-4eae-4d5a-aaaa-111111111111', 'Tiana Rakoto', 9, 'STRIKER', 'MADAGASCAR', 24, 2024, 'a3e11b02-9be6-41a0-bc22-111111111111'),
+('1fd09d63-4eae-4d5a-bbbb-222222222222', 'Marco Rami', 10, 'MIDFIELDER', 'MADAGASCAR', 27, 2024, 'a3e11b02-9be6-41a0-bc22-222222222222');
 
 -- SEASONS
-INSERT INTO season (id, year, alias, status) VALUES
-('55555555-aaaa-bbbb-cccc-111111111111', 2024, '2024 Season', 'STARTED');
-('55555555-aaaa-bbbb-cccc-333333333333', 2025, '2025 Season', 'NOT_STARTED');
+INSERT INTO season (id, year, alias, status, created_at) VALUES
+('55555555-aaaa-bbbb-cccc-111111111111', 2024, '2024 Season', 'STARTED', 2024),
+('55555555-aaaa-bbbb-cccc-333333333333', 2025, '2025 Season', 'NOT_STARTED', 2024);
 
 -- MATCHES
 INSERT INTO "match" (id, stadium, match_datetime, status, score_home, score_away, season_id, club_home_id, club_away_id) VALUES
@@ -25,14 +25,14 @@ INSERT INTO "match" (id, stadium, match_datetime, status, score_home, score_away
 
 -- MATCH_PLAYER
 INSERT INTO match_player (match_id, player_id, club_id) VALUES
-('match-2024-001', '1fd09d63-4eae-4d5a-aaaa-111111111111', 'a3e11b02-9be6-41a0-bc22-111111111111'),
-('match-2024-001', '1fd09d63-4eae-4d5a-bbbb-222222222222', 'a3e11b02-9be6-41a0-bc22-222222222222');
+('54612378-aaaa-bbbb-cccc-424242445142', '1fd09d63-4eae-4d5a-aaaa-111111111111', 'a3e11b02-9be6-41a0-bc22-111111111111'),
+('54612378-aaaa-bbbb-cccc-424242445142', '1fd09d63-4eae-4d5a-bbbb-222222222222', 'a3e11b02-9be6-41a0-bc22-222222222222');
 
 -- GOALS
 INSERT INTO goal (minute, own_goal, match_id, club_id, player_id) VALUES
-(15, false, 'match-2024-001', 'a3e11b02-9be6-41a0-bc22-111111111111', '1fd09d63-4eae-4d5a-aaaa-111111111111'),
-(55, false, 'match-2024-001', 'a3e11b02-9be6-41a0-bc22-111111111111', '1fd09d63-4eae-4d5a-aaaa-111111111111'),
-(70, false, 'match-2024-001', 'a3e11b02-9be6-41a0-bc22-222222222222', '1fd09d63-4eae-4d5a-bbbb-222222222222');
+(15, false, '54612378-aaaa-bbbb-cccc-424242445142', 'a3e11b02-9be6-41a0-bc22-111111111111', '1fd09d63-4eae-4d5a-aaaa-111111111111'),
+(55, false, '54612378-aaaa-bbbb-cccc-424242445142', 'a3e11b02-9be6-41a0-bc22-111111111111', '1fd09d63-4eae-4d5a-aaaa-111111111111'),
+(70, false, '54612378-aaaa-bbbb-cccc-424242445142', 'a3e11b02-9be6-41a0-bc22-222222222222', '1fd09d63-4eae-4d5a-bbbb-222222222222');
 
 -- PLAYER_STATISTICS
 INSERT INTO player_statistics (scored_goals, playing_time_value, playing_time_unit, player_id, season_id) VALUES

@@ -6,8 +6,7 @@ CREATE TABLE coach (
     id UUID PRIMARY KEY,
     name VARCHAR(128) NOT NULL,
     nationality VARCHAR(56),
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+    created_at INTEGER NOT NULL
 );
 
 -- CLUB
@@ -17,8 +16,7 @@ CREATE TABLE club (
     acronym VARCHAR(3) NOT NULL,
     year_creation INTEGER,
     stadium VARCHAR(128),
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created_at INTEGER NOT NULL,
     coach_id UUID REFERENCES coach(id) ON DELETE SET NULL
 );
 
@@ -30,8 +28,7 @@ CREATE TABLE player (
     position VARCHAR(16) CHECK (position IN ('STRIKER', 'MIDFIELDER', 'DEFENSE', 'GOAL_KEEPER')),
     nationality VARCHAR(50),
     age INT CHECK (age BETWEEN 0 AND 80),
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created_at INTEGER NOT NULL,
     current_club_id UUID REFERENCES club(id) ON DELETE SET NULL
 );
 
@@ -41,8 +38,7 @@ CREATE TABLE season (
     year INT NOT NULL UNIQUE,
     alias VARCHAR(24) NOT NULL,
     status VARCHAR(16) NOT NULL CHECK (status IN ('NOT_STARTED', 'STARTED', 'FINISHED')),
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+    created_at INTEGER NOT NULL
 );
 
 -- MATCH
@@ -76,7 +72,6 @@ CREATE TABLE goal (
     match_id UUID NOT NULL REFERENCES "match"(id) ON DELETE CASCADE,
     club_id UUID NOT NULL REFERENCES club(id) ON DELETE CASCADE,
     player_id UUID NOT NULL REFERENCES player(id) ON DELETE CASCADE
-    -- Removed the constraint that requires the player to be in match_player
 );
 
 -- PLAYER_STATISTICS

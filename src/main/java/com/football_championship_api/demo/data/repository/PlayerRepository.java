@@ -115,15 +115,12 @@ public class PlayerRepository {
             stmt.setString(4, entity.getPosition().name());
             stmt.setString(5, entity.getNationality());
             stmt.setLong(6, entity.getAge());
-            stmt.setTimestamp(7, Timestamp.valueOf(now));
-            stmt.setTimestamp(8, Timestamp.valueOf(now));
+            stmt.setInt(7, entity.getCreatedAt());
             stmt.setObject(9, entity.getCurrentClub() != null ? entity.getCurrentClub().getId() : null);
 
             stmt.executeUpdate();
 
             entity.setId(id);
-            entity.setCreatedAt(now);
-            entity.setUpdatedAt(now);
             return entity;
 
         } catch (SQLException e) {
@@ -150,8 +147,6 @@ public class PlayerRepository {
             stmt.setObject(8, entity.getId());
 
             stmt.executeUpdate();
-
-            entity.setUpdatedAt(now);
             return entity;
 
         } catch (SQLException e) {
@@ -167,8 +162,7 @@ public class PlayerRepository {
         player.setPosition(PlayerPosition.valueOf(rs.getString("position")));
         player.setNationality(rs.getString("nationality"));
         player.setAge(rs.getInt("age"));
-        player.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
-        player.setUpdatedAt(rs.getTimestamp("updated_at").toLocalDateTime());
+        player.setCreatedAt(rs.getInt("created_at"));
         player.setCurrentClub(clubRepository.findById((UUID) rs.getObject("current_club_id")));
         return player;
     }

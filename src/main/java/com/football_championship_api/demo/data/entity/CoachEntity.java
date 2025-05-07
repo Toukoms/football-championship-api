@@ -14,6 +14,5 @@ public class CoachEntity {
     private UUID id;
     private String name;
     private String nationality;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    private int createdAt;
 }

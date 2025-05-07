@@ -19,8 +19,8 @@ public class PlayerController {
     @GetMapping
     public ResponseEntity<List<PlayerEntity>> getPlayers(
             @RequestParam(name = "name", required = false) String name,
-            @RequestParam(name = "ageMinimum", required = false) int ageMinimum,
-            @RequestParam(name = "ageMaximum", required = false) int ageMaximum,
+            @RequestParam(name = "ageMinimum", required = false) Integer ageMinimum,
+            @RequestParam(name = "ageMaximum", required = false) Integer ageMaximum,
             @RequestParam(name = "clubName", required = false) String clubName
     ) {
         return ResponseEntity.ok(playerService.getPlayers(name, ageMinimum, ageMaximum, clubName));

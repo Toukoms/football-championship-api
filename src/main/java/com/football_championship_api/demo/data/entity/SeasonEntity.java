@@ -15,6 +15,5 @@ public class SeasonEntity {
     private Integer year;
     private String alias;
     private PlayingStatus status;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    private int createdAt;
 }

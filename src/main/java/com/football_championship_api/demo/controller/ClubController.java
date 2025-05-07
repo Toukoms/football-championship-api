@@ -46,8 +46,8 @@ public class ClubController {
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
-    @GetMapping("/{id}/statistics/{seasonYear}")
-    public ResponseEntity<ClubStatisticsEntity> getStatisticsOfClubById(@PathVariable UUID id, @PathVariable Integer seasonYear) {
-        return ResponseEntity.ok(clubService.getStatisticsOfClubById(id, seasonYear));
+    @GetMapping("/statistics/{seasonYear}")
+    public ResponseEntity<List<ClubStatisticsEntity>> getStatisticsOfClubs(@PathVariable Integer seasonYear) {
+        return ResponseEntity.ok(clubService.getStatisticsOfClubs(seasonYear));
     }
 }

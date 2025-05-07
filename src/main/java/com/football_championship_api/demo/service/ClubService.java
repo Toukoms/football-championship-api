@@ -23,11 +23,11 @@ public class ClubService {
         return clubRepository.findAll();
     }
 
-    public ClubStatisticsEntity getStatisticsOfClubById(UUID clubId, Integer seasonYear) {
-        if (clubId == null || seasonYear == null) {
-            throw new IllegalArgumentException("Club ID and season year must be provided");
+    public List<ClubStatisticsEntity> getStatisticsOfClubs(Integer seasonYear) {
+        if (seasonYear == null) {
+            throw new IllegalArgumentException("Season year must be provided");
         }
-        return clubStatisticsRepository.getStatisticsOfClubById(clubId, seasonYear);
+        return clubStatisticsRepository.getStatisticsOfClubs(seasonYear);
     }
 
     public List<PlayerEntity> getPlayersOfClubById(UUID clubId) {
@@ -36,5 +36,15 @@ public class ClubService {
 
     public List<ClubEntity> createOrUpdateClubs(List<ClubEntity> clubs) {
         return clubRepository.saveAll(clubs);
+    }
+
+    public List<PlayerEntity> changePlayersToClubById(List<PlayerEntity> players) {
+        // TODO: Implement changePlayersToClubById
+        return null;
+    }
+
+    public List<PlayerEntity> addPlayersToClubById(List<PlayerEntity> players) {
+        // TODO: Implement addPlayersToClubById
+        return null;
     }
 }

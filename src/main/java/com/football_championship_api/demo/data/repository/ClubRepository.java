@@ -22,7 +22,7 @@ public class ClubRepository {
 
     public ClubEntity save(ClubEntity club) {
         String sql = "INSERT INTO club (id, name, acronym, stadium, coach_id) VALUES (?,?,?,?,?) " +
-                "ON CONFLICT (name) DO UPDATE SET acronym = EXCLUDED.acronym, stadium = EXCLUDED.stadium, coach_id = EXCLUDED.coach_id, updated_at = NOW() RETURNING id";
+                "ON CONFLICT (id) DO UPDATE SET name = EXCLUDED.name, acronym = EXCLUDED.acronym, stadium = EXCLUDED.stadium, coach_id = EXCLUDED.coach_id, updated_at = NOW() RETURNING id";
         try (Connection conn = dataSource.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
             UUID id = UUID.randomUUID();
             stmt.setObject(1, id);

@@ -1,6 +1,7 @@
 package com.football_championship_api.demo.data.repository;
 
 import com.football_championship_api.demo.config.CustomDataSource;
+import com.football_championship_api.demo.data.entity.ClubEntity;
 import com.football_championship_api.demo.data.entity.PlayerEntity;
 import com.football_championship_api.demo.data.entity.PlayerPosition;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,21 @@ public class PlayerRepository {
 
     private final CustomDataSource dataSource;
     private final ClubRepository clubRepository;
+
+    public List<PlayerEntity> addPlayersToClub(UUID clubId, List<PlayerEntity> players) {
+        List<PlayerEntity> savedPlayers = new ArrayList<>();
+        ClubEntity currentClub = clubRepository.findById(clubId);
+        for (PlayerEntity player : players) {
+            if (player.getId() == null) {
+                player = save(player);
+            }
+            if (player.getCurrentClub() == null) {
+            }
+            player.setCurrentClub(currentClub);
+            savedPlayers.add(save(player));
+        }
+        return savedPlayers;
+    }
 
     public List<PlayerEntity> getPlayersOfClubById(UUID clubId) {
         String sql = "SELECT * FROM player JOIN club ON player.current_club_id = club.id WHERE club.id = ?";
@@ -104,7 +120,7 @@ public class PlayerRepository {
     public PlayerEntity save(PlayerEntity entity) {
         String sql = "INSERT INTO player (id, name, number, position, nationality, age, current_club_id) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?) " +
-                "ON CONFLICT (name, number) DO UPDATE SET position = EXCLUDED.position, nationality = EXCLUDED.nationality, age = EXCLUDED.age, current_club_id = EXCLUDED.current_club_id, updated_at = NOW() RETURNING id";
+                "ON CONFLICT (id) DO UPDATE SET name = EXCLUDED.name, number = EXCLUDED.number, position = EXCLUDED.position, nationality = EXCLUDED.nationality, age = EXCLUDED.age, current_club_id = EXCLUDED.current_club_id, updated_at = NOW() RETURNING id";
 
         try (Connection conn = dataSource.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
             UUID id = UUID.randomUUID();

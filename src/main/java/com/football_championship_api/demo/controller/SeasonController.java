@@ -23,7 +23,7 @@ public class SeasonController {
 
     @PostMapping
     public ResponseEntity<List<SeasonEntity>> createSeasons(
-            List<SeasonRest> seasons
+            @RequestBody List<SeasonRest> seasons
     ) {
         List<SeasonEntity> seasonEntities = new ArrayList<>();
         seasons.forEach(s -> {
@@ -36,7 +36,9 @@ public class SeasonController {
     }
 
     @PutMapping("/{seasonYear}/status")
-    public ResponseEntity<SeasonEntity> updateSeasonStatus() {
-        throw new UnsupportedOperationException("Not yet implemented");
+    public ResponseEntity<SeasonEntity> updateSeasonStatus(
+            @PathVariable Integer seasonYear
+    ) {
+        return ResponseEntity.ok(seasonService.updateStatus(seasonYear));
     }
 }

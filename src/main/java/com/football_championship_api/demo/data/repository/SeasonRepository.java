@@ -20,6 +20,53 @@ public class SeasonRepository {
 
     private final CustomDataSource dataSource;
 
+    public SeasonEntity updateStatus(Integer seasonYear) {
+        SeasonEntity season = findByYear(seasonYear);
+        PlayingStatus nextStatus = getNextStatus(seasonYear, season);
+
+        String sql = "UPDATE season SET status = ? WHERE year = ? RETURNING id";
+        try (Connection conn = dataSource.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, nextStatus.toString());
+            stmt.setInt(2, seasonYear);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return findById((UUID) rs.getObject("id"));
+            }
+            return null;
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to update season status : " + sql, e);
+        }
+    }
+
+    private PlayingStatus getNextStatus(Integer seasonYear, SeasonEntity season) {
+        if (season == null) {
+            throw new IllegalArgumentException("Season with the year=" + seasonYear + " does not exist");
+        }
+        PlayingStatus currentStatus = season.getStatus();
+        PlayingStatus nextStatus = null;
+
+        switch (currentStatus) {
+            case NOT_STARTED -> nextStatus = PlayingStatus.STARTED;
+            case STARTED -> nextStatus = PlayingStatus.FINISHED;
+        }
+        assert nextStatus != null;
+        return nextStatus;
+    }
+
+    public SeasonEntity findByYear(Integer seasonYear) {
+        String sql = "SELECT * FROM season WHERE year = ?";
+        try (Connection conn = dataSource.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, seasonYear);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return mapResultSetToSeason(rs);
+            }
+            return null;
+        } catch (SQLException e) {
+            throw new RuntimeException("Error find season by year", e);
+        }
+    }
+
     public List<SeasonEntity> saveAll(List<SeasonEntity> seasons) {
         List<SeasonEntity> savedSeasons = new ArrayList<>();
         for (SeasonEntity season : seasons) {

@@ -16,8 +16,7 @@ CREATE TABLE club (
     acronym VARCHAR(3) NOT NULL,
     year_creation INTEGER,
     stadium VARCHAR(128),
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created_at INTEGER NOT NULL,
     coach_id UUID REFERENCES coach(id) ON DELETE SET NULL
 );
 

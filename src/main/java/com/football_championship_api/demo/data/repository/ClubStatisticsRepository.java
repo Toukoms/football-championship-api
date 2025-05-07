@@ -20,7 +20,7 @@ public class ClubStatisticsRepository {
     private final SeasonRepository seasonRepository;
 
     public List<ClubStatisticsEntity> getStatisticsOfClubs(Integer seasonYear) {
-        String sql = "SELECT * FROM club_statistics cs JOIN season s ON cs.season_id = s.id WHERE s.year = ?";
+        String sql = "SELECT * FROM club_statistics cs JOIN season s ON cs.season_id = s.id WHERE s.year = ? ORDER By ranking_points DESC, difference_goals DESC, clean_sheet_number DESC";
         try (Connection conn = dataSource.getConnection(); java.sql.PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, seasonYear);
             ResultSet rs = stmt.executeQuery();

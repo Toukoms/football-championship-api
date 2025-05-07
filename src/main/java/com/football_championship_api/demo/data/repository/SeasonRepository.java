@@ -8,6 +8,8 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -17,6 +19,31 @@ import java.util.UUID;
 public class SeasonRepository {
 
     private final CustomDataSource dataSource;
+
+    public List<SeasonEntity> saveAll(List<SeasonEntity> seasons) {
+        List<SeasonEntity> savedSeasons = new ArrayList<>();
+        for (SeasonEntity season : seasons) {
+            savedSeasons.add(save(season));
+        }
+        return savedSeasons;
+    }
+
+    public SeasonEntity save(SeasonEntity season) {
+        String sql = "INSERT INTO season (id, year, alias) VALUES (?, ?, ?) RETURNING id";
+        try (Connection conn = dataSource.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+            UUID id = UUID.randomUUID();
+            stmt.setObject(1, id);
+            stmt.setInt(2, season.getYear());
+            stmt.setString(3, season.getAlias());
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return findById((UUID) rs.getObject("id"));
+            }
+            return null;
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to save season : " + sql, e);
+        }
+    }
 
     public SeasonEntity findById(UUID seasonId) {
         String sql = "SELECT * FROM season WHERE id = ?";

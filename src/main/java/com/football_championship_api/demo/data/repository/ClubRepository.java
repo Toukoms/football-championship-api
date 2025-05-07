@@ -20,6 +20,34 @@ public class ClubRepository {
     private final CustomDataSource dataSource;
     private final CoachRepository coachRepository;
 
+    public ClubEntity save(ClubEntity club) {
+        String sql = "INSERT INTO club (id, name, acronym, stadium, coach_id) VALUES (?,?,?,?,?) " +
+                "ON CONFLICT (name) DO UPDATE SET acronym = EXCLUDED.acronym, stadium = EXCLUDED.stadium, coach_id = EXCLUDED.coach_id, updated_at = NOW() RETURNING id";
+        try (Connection conn = dataSource.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+            UUID id = UUID.randomUUID();
+            stmt.setObject(1, id);
+            stmt.setString(2, club.getName());
+            stmt.setString(3, club.getAcronym());
+            stmt.setString(4, club.getStadium());
+            stmt.setObject(5, club.getCoach() == null ? null : club.getCoach().getId());
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return findById((UUID) rs.getObject("id"));
+            }
+            return null;
+        } catch (SQLException e) {
+            throw new RuntimeException("Error saving club : " + sql, e);
+        }
+    }
+
+    public List<ClubEntity> saveAll(List<ClubEntity> clubs) {
+        List<ClubEntity> savedClubs = new ArrayList<>();
+        for (ClubEntity club : clubs) {
+            savedClubs.add(save(club));
+        }
+        return savedClubs;
+    }
+
     public List<ClubEntity> findAll() {
         String sql = "SELECT * FROM club ORDER BY name ASC";
         try (Connection conn = dataSource.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {

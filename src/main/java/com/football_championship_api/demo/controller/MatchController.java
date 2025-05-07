@@ -1,23 +1,31 @@
 package com.football_championship_api.demo.controller;
 
 import com.football_championship_api.demo.data.entity.MatchEntity;
+import com.football_championship_api.demo.data.entity.PlayingStatus;
+import com.football_championship_api.demo.service.MatchService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
 @RequestMapping("/matches")
+@RequiredArgsConstructor
 public class MatchController {
+    private final MatchService matchService;
+
     @GetMapping("/{seasonYear}")
     public ResponseEntity<List<MatchEntity>> getMatchesBySeasonYear(
             @PathVariable Integer seasonYear,
-            @RequestParam(required = false) String matchStatus,
+            @RequestParam(required = false) PlayingStatus matchStatus,
             @RequestParam(required = false) String clubPlayingName,
-            @RequestParam(required = false) String matchAfter,
-            @RequestParam(required = false) String matchBeforeOrEquals
+            @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate matchAfter,
+            @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate matchBeforeOrEquals
     ) {
-        throw new UnsupportedOperationException("Not yet implemented");
+        return ResponseEntity.ok(matchService.getMatchesBySeasonYear(seasonYear, matchStatus, clubPlayingName, matchAfter, matchBeforeOrEquals));
     }
 
     @PutMapping("/{id}/status")

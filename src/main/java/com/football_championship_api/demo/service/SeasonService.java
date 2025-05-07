@@ -15,4 +15,12 @@ public class SeasonService {
     public List<SeasonEntity> getSeasons() {
         return seasonRepository.findAll();
     }
+
+    public List<SeasonEntity> createSeasons(List<SeasonEntity> seasons) {
+        return seasonRepository.saveAll(seasons);
+    }
+
+    public SeasonEntity updateStatus(Integer seasonYear) {
+        return seasonRepository.updateStatus(seasonYear);
+    }
 }

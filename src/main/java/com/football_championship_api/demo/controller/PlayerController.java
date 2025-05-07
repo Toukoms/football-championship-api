@@ -27,8 +27,10 @@ public class PlayerController {
     }
 
     @PutMapping
-    public ResponseEntity<PlayerEntity> createOrUpdatePlayers() {
-        throw new UnsupportedOperationException("Not yet implemented");
+    public ResponseEntity<List<PlayerEntity>> createOrUpdatePlayers(
+            @RequestBody List<PlayerEntity> players
+    ) {
+        return ResponseEntity.ok(playerService.createOrUpdatePlayers(players));
     }
 
     @GetMapping("/{id}/statistics/{seasonYear}")

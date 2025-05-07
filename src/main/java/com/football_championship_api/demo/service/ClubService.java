@@ -44,7 +44,7 @@ public class ClubService {
     }
 
     public List<PlayerEntity> addPlayersToClubById(List<PlayerEntity> players) {
-        // TODO: Implement addPlayersToClubById
+        // return playerRepository.addPlayersToClub();
         return null;
     }
 }

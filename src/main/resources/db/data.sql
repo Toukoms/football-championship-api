@@ -4,9 +4,9 @@ INSERT INTO coach (id, name, nationality, created_at) VALUES
 ('eecf58b6-1a3a-4d24-bf4b-222222222222', 'Franco', 'ITALY', 2024);
 
 -- CLUBS
-INSERT INTO club (id, name, acronym, year_creation, stadium, created_at, coach_id) VALUES
-('a3e11b02-9be6-41a0-bc22-111111111111', 'AS Adema', 'ADA', 2000, 'Mahamasina', 2024, 'eecf58b6-1a3a-4d24-bf4b-111111111111'),
-('a3e11b02-9be6-41a0-bc22-222222222222', 'CNaPS Sport', 'CNS', 2005, 'Vontovorona', 2024, 'eecf58b6-1a3a-4d24-bf4b-222222222222');
+INSERT INTO club (id, name, acronym, stadium, created_at, coach_id) VALUES
+('a3e11b02-9be6-41a0-bc22-111111111111', 'AS Adema', 'ADA', 'Mahamasina', 2000, 'eecf58b6-1a3a-4d24-bf4b-111111111111'),
+('a3e11b02-9be6-41a0-bc22-222222222222', 'CNaPS Sport', 'CNS', 'Vontovorona', 2005, 'eecf58b6-1a3a-4d24-bf4b-222222222222');
 
 -- PLAYERS
 INSERT INTO player (id, name, number, position, nationality, age, created_at, current_club_id) VALUES

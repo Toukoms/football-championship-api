@@ -29,7 +29,8 @@ public class PlayerRepository {
             if (player.getId() == null) {
                 player = save(player);
             }
-            if (player.getCurrentClub() == null) {
+            if (player.getCurrentClub() != null) {
+                throw new RuntimeException("Player already attached to a club");
             }
             player.setCurrentClub(currentClub);
             savedPlayers.add(save(player));

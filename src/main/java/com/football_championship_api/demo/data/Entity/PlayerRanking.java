@@ -1,4 +1,4 @@
-package com.football_championship_api.demo.data.entity;
+package com.football_championship_api.demo.data.Entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

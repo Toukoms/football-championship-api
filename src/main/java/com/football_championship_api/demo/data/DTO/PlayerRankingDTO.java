@@ -1,6 +1,6 @@
 package com.football_championship_api.demo.data.DTO;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.football_championship_api.demo.data.Entity.Championship;
 import com.football_championship_api.demo.data.Entity.PlayingTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,13 +10,15 @@ import lombok.Setter;
 import java.util.UUID;
 
 
-@JsonIgnoreProperties(ignoreUnknown = true)
+
 @AllArgsConstructor
 @NoArgsConstructor
-@Setter
 @Getter
-public class PlayerStatDTO {
-    private UUID id;
-    private int scoredGoal;
+@Setter
+public class PlayerRankingDTO {
+    private int rank;
+    private UUID player;
+    private Championship championship;
+    private int scoredGoals;
     private PlayingTime playingTime;
 }

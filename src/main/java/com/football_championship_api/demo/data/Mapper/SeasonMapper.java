@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 public class SeasonMapper {
 
     public int getSeasonYear(SeasonDTO seasonDTO){
-            return seasonDTO.getYear();
+
+        return seasonDTO.getYear();
     }
 }

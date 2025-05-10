@@ -1,8 +1,11 @@
 package com.football_championship_api.demo.data.Mapper;
 
 import com.football_championship_api.demo.data.DTO.ClubDTO;
-import com.football_championship_api.demo.data.entity.Club;
+import com.football_championship_api.demo.data.Entity.Club;
+import org.springframework.stereotype.Component;
 
+
+@Component
 public class ClubMapper implements Mapper<Club, ClubDTO> {
 
     @Override

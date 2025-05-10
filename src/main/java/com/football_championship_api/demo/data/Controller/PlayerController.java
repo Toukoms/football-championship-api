@@ -1,9 +1,8 @@
 package com.football_championship_api.demo.data.Controller;
 
 
-import com.football_championship_api.demo.data.DTO.PlayerDTO;
+import com.football_championship_api.demo.data.DTO.PlayerRankingDTO;
 import com.football_championship_api.demo.data.Service.PlayerService;
-import com.football_championship_api.demo.data.entity.Player;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,8 +19,8 @@ public class PlayerController {
     PlayerService service;
 
     @GetMapping
-    public ResponseEntity<List<PlayerDTO>> getBestPlayers(){
-        List<PlayerDTO> players = service.getBestPlayers();
+    public ResponseEntity<List<PlayerRankingDTO>> getBestPlayers(int top, String playingTimeValue){
+        List<PlayerRankingDTO> players = service.getBestPlayers(top,playingTimeValue);
         return ResponseEntity.ok(players);
     }
 

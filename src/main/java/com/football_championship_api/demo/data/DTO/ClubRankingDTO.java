@@ -1,20 +1,18 @@
 package com.football_championship_api.demo.data.DTO;
 
 import com.football_championship_api.demo.data.Entity.Club;
-import com.football_championship_api.demo.data.Entity.Coach;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.UUID;
 
-
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
-public class ClubStatDTO {
+public class ClubRankingDTO {
+
     private int rank;
     private Club club;
     private int rankingPoints;

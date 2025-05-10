@@ -1,4 +1,4 @@
-package com.football_championship_api.demo.data.entity;
+package com.football_championship_api.demo.data.Entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,6 +14,5 @@ public class Coach {
     private UUID id;
     private String name;
     private String nationality;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    private int createdAt;
 }

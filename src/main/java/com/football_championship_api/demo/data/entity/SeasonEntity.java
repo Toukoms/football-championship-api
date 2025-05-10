@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -16,4 +16,6 @@ public class SeasonEntity {
     private String alias;
     private PlayingStatus status;
     private int createdAt;
+
+    private List<MatchEntity> matches;
 }

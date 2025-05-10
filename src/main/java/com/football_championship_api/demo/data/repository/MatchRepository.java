@@ -1,8 +1,10 @@
 package com.football_championship_api.demo.data.repository;
 
 import com.football_championship_api.demo.config.CustomDataSource;
+import com.football_championship_api.demo.data.entity.ClubEntity;
 import com.football_championship_api.demo.data.entity.MatchEntity;
 import com.football_championship_api.demo.data.entity.PlayingStatus;
+import com.football_championship_api.demo.data.entity.SeasonEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -19,6 +21,23 @@ import java.util.UUID;
 public class MatchRepository {
     private final CustomDataSource dataSource;
     private final ClubRepository clubRepository;
+
+    public MatchEntity save(MatchEntity match) {
+        String sql = "INSERT INTO match (id, stadium, club_home_id, club_away_id) VALUES (?,?,?,?) RETURNING id";
+        try (Connection conn = dataSource.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setObject(1, UUID.randomUUID());
+            stmt.setString(2, match.getStadium());
+            stmt.setObject(3, match.getHomeClub().getId());
+            stmt.setObject(4, match.getAwayClub().getId());
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return findById((UUID) rs.getObject("id"));
+            }
+            return null;
+        } catch (SQLException e) {
+            throw new RuntimeException("Error saving match : " + sql, e);
+        }
+    }
 
     public List<MatchEntity> findAll(Integer seasonYear, FilterMatch filter) {
         StringBuilder sql = new StringBuilder("SELECT * FROM \"match\" m JOIN club c ON m.club_home_id = c.id JOIN club c2 ON m.club_away_id = c2.id JOIN season s ON m.season_id = s.id WHERE s.year = ?");
@@ -110,5 +129,26 @@ public class MatchRepository {
         }
 
         return match;
+    }
+
+    public List<MatchEntity> generateMatches(SeasonEntity season) {
+        if (season.getStatus() != PlayingStatus.STARTED) {
+            throw new RuntimeException("Season must be started to generate matches");
+        }
+        List<ClubEntity> clubs = clubRepository.findAll();
+        List<MatchEntity> matches = new ArrayList<>();
+        for (int i = 0; i < clubs.size(); i++) {
+            for (int j = 0; j < clubs.size(); j++) {
+                if (i == j) {
+                    continue;
+                }
+                MatchEntity match = new MatchEntity();
+                match.setHomeClub(clubs.get(i));
+                match.setAwayClub(clubs.get(j));
+                match.setStadium(clubs.get(i).getStadium());
+                matches.add(save(match));
+            }
+        }
+        return matches;
     }
 }

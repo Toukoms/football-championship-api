@@ -18,7 +18,6 @@ public class MatchMakerController {
     public ResponseEntity<List<MatchEntity>> createMatches(
             @PathVariable Integer seasonYear
     ) {
-        throw new UnsupportedOperationException("Not yet implemented");
-        // return ResponseEntity.ok(matchService.createMatches(seasonYear));
+        return ResponseEntity.ok(matchService.createMatches(seasonYear));
     }
 }

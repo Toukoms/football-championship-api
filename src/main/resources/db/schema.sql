@@ -3,6 +3,8 @@ CREATE DATABASE foot_central;
 
 CREATE TYPE championship_type AS ENUM ('PREMIER_LEAGUE', 'LA_LIGA', 'BUNDESLIGA', 'SERIA', 'LIGUE_1');
 
+CREATE TABLE championnat (client_url VARCHAR(255) NOT NULL);
+
 
 CREATE TABLE coach (
     id UUID PRIMARY KEY,

@@ -1,6 +1,3 @@
-CREATE DATABASE football_championship;
-\c football_championship;
-
 -- COACH
 CREATE TABLE coach (
     id UUID PRIMARY KEY,
@@ -96,6 +93,8 @@ CREATE TABLE club_statistics (
 );
 
 -- TRANSFER
-CREATE TABLE transfer {
-    player_id UUID NOT NULL REFERENCES player(id)
-}
+CREATE TABLE transfer (
+player_id UUID NOT NULL REFERENCES player(id)
+);
+
+
